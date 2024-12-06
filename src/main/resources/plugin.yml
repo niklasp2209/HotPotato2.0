@@ -1,0 +1,10 @@
+name: "HotPotato"
+author: BukkitNews
+version: '${project.version}'
+main: de.bukkitnews.hotpotato.HotPotato
+api-version: 1.21
+depend: []
+softdepend: []
+loadbefore: []
+libraries: []
+commands:
