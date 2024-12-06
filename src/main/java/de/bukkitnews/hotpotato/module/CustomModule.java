@@ -28,7 +28,7 @@ public abstract class CustomModule {
     private final String moduleName;
 
     // A list of event listeners to be registered for this module.
-    private List<Listener> eventListeners;
+    private List<Listener> listeners;
 
     // A map of commands associated with this module. The keys are command names,
     // and the values are the CommandExecutor instances that handle the commands.
@@ -94,11 +94,11 @@ public abstract class CustomModule {
      * and registers each with the plugin's event manager.
      */
     private void registerEventListeners() {
-        if (eventListeners == null || eventListeners.isEmpty()) return;
+        if (listeners == null || listeners.isEmpty()) return;
         PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        eventListeners.forEach(listener -> {
+        listeners.forEach(listener -> {
             pluginManager.registerEvents(listener, hotPotato);
-            logToConsole("Module: " + moduleName + " has registered event listener: " + listener.getClass().getSimpleName());
+            logToConsole("Module: " + moduleName + " has registered event listener: " + listener);
         });
     }
 
@@ -107,10 +107,10 @@ public abstract class CustomModule {
      * and removes all of them from the event handler list.
      */
     private void unregisterEventListeners() {
-        if (eventListeners == null || eventListeners.isEmpty()) return;
-        eventListeners.forEach(listener -> {
+        if (listeners == null || listeners.isEmpty()) return;
+        listeners.forEach(listener -> {
             HandlerList.unregisterAll(listener);
-            logToConsole("Module: " + moduleName + " has unregistered event listener: " + listener.getClass().getSimpleName());
+            logToConsole("Module: " + moduleName + " has unregistered event listener: " + listener);
         });
     }
 
