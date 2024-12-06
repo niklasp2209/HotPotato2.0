@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
+import de.bukkitnews.hotpotato.module.game.GameModule;
 
 import java.util.LinkedHashMap;
 
@@ -27,7 +28,7 @@ public final class ModuleManager {
      * This method is responsible for starting all modules in the system.
      */
     public void activateModules(){
-        //MODULES
+        modules.put(GameModule.class, new GameModule(hotPotato));
 
         loadModules();
     }
