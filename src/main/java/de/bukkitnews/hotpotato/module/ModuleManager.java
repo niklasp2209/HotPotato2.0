@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
+import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 
@@ -27,6 +28,7 @@ public final class ModuleManager {
     public void activateModules(){
         this.modules.put(GameModule.class, new GameModule(this.hotPotato));
         this.modules.put(PlayerModule.class, new PlayerModule(this.hotPotato));
+        this.modules.put(ArenaModule.class, new ArenaModule(this.hotPotato));
 
         loadModules();
     }

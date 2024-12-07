@@ -1,0 +1,8 @@
+locations:
+  lobby:
+    world: "world"
+    x: 0
+    y: 70
+    z: 0
+    yaw: 150
+    pitch: 150
