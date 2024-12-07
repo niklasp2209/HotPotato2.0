@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.game.GameModule;
+import de.bukkitnews.hotpotato.module.player.PlayerModule;
 
 import java.util.LinkedHashMap;
 
@@ -29,6 +30,7 @@ public final class ModuleManager {
      */
     public void activateModules(){
         modules.put(GameModule.class, new GameModule(hotPotato));
+        modules.put(PlayerModule.class, new PlayerModule(hotPotato));
 
         loadModules();
     }

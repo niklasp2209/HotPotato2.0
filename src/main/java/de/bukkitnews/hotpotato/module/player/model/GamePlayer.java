@@ -6,58 +6,95 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a player in the game with a unique identifier (UUID) and associated player data.
- * This class provides methods to store, retrieve, and manage custom data related to the player.
- * It allows for the flexible storage of various types of player-specific information.
+ * Represents a player in the game, uniquely identified by a UUID.
+ * This class encapsulates player-specific data, providing methods to store, retrieve,
+ * and manipulate this information dynamically.
  *
- * The data is stored in a Map where the key is a String and the value can be any Object,
- * allowing for dynamic and diverse types of data to be stored.
+ * <p>The player's data is stored in a flexible key-value mapping using a Map.
+ * Each key is a String representing the name of the data field, while the value
+ * can be any type (Object), allowing the storage of diverse player-related data.
  *
- * The 'saveData' method is currently a placeholder for future implementation of a mechanism
- * to persist the player's data.
+ * <p>This class is designed to integrate seamlessly with other systems such as
+ * caching or persistent storage for efficient player management.
  */
 @Getter
 public class GamePlayer {
 
-    private final String uuid;  // The unique identifier (UUID) of the player
-    private final Map<String, Object> data;  // A map to store key-value pairs of player data
+    /**
+     * The unique identifier (UUID) of the player.
+     */
+    private final String uuid;
 
     /**
-     * Constructor to initialize a GamePlayer instance with a unique UUID.
-     *
-     * @param uuid The unique identifier of the player
+     * A map to store the player's data as key-value pairs.
+     * Keys are strings representing data fields (e.g., "wins"), and values can be of any type.
      */
-    public GamePlayer(String uuid){
+    private final Map<String, Object> data;
+
+    /**
+     * Constructs a new GamePlayer instance associated with a unique UUID.
+     *
+     * @param uuid the unique identifier of the player
+     */
+    public GamePlayer(String uuid) {
         this.uuid = uuid;
         this.data = new HashMap<>();
     }
 
     /**
-     * Adds or updates a piece of player data with a specified key and value.
+     * Stores or updates a specific piece of data for the player.
      *
-     * @param key The key associated with the data
-     * @param value The value to store for the given key
+     * @param key   the unique key associated with the data (e.g., "wins", "name")
+     * @param value the value to store under the given key
      */
-    public void setData(String key, Object value){
+    public void setData(String key, Object value) {
         data.put(key, value);
     }
 
     /**
-     * Retrieves a piece of player data based on the given key.
+     * Retrieves the value associated with a given key from the player's data.
      *
-     * @param key The key associated with the data
-     * @return The value stored for the specified key, or null if not found
+     * @param key the unique key of the data to retrieve
+     * @return the value stored under the given key, or {@code null} if the key does not exist
      */
-    public Object getData(String key){
+    public Object getData(String key) {
         return data.get(key);
     }
 
     /**
-     * Placeholder method to save the player’s data. Currently not implemented.
-     * In a future version, this method may include logic to persist data to a database
-     * or other storage solutions.
+     * Increments the player's win count by 1.
+     * Assumes that the "wins" field is an integer.
+     *
+     * <p>If the "wins" field is missing or not an integer, this method may throw a
+     * {@link ClassCastException} or a {@link NullPointerException}.
      */
-    public void saveData(){
-        // Method for saving player data (currently not implemented)
+    public void increaseWins() {
+        int currentWins = (int) getData("wins");
+        setData("wins", currentWins + 1);
+    }
+
+    /**
+     * Increments the player's games played count by 1.
+     * Assumes that the "gamesPlayed" field is an integer.
+     *
+     * <p>If the "gamesPlayed" field is missing or not an integer, this method may throw a
+     * {@link ClassCastException} or a {@link NullPointerException}.
+     */
+    public void increaseGamesPlayed() {
+        int currentGames = (int) getData("gamesPlayed");
+        setData("gamesPlayed", currentGames + 1);
+    }
+
+    /**
+     * Increases the player's total playtime by a specified amount.
+     * Assumes that the "playtime" field is a long.
+     *
+     * @param amount the amount of playtime to add, in the appropriate units (e.g., milliseconds or seconds)
+     * @throws ClassCastException if the "playtime" field is not a long
+     * @throws NullPointerException if the "playtime" field is missing
+     */
+    public void increasePlaytime(long amount) {
+        long currentPlaytime = (long) getData("playtime");
+        setData("playtime", currentPlaytime + amount);
     }
 }
