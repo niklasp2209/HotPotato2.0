@@ -19,11 +19,6 @@ public class PlayerQuitListener implements Listener {
 
     private final PlayerModule playerModule;
 
-    /**
-     * Constructor to initialize the PlayerQuitListener with a reference to the PlayerModule.
-     *
-     * @param playerModule The instance of the PlayerModule containing the GamePlayerManager.
-     */
     public PlayerQuitListener(PlayerModule playerModule) {
         this.playerModule = playerModule;
     }

@@ -21,16 +21,11 @@ import java.util.Arrays;
 @Getter
 public class PlayerModule extends CustomModule {
 
-    private final SQLManager sqlManager;  // SQLManager instance for database operations
-    private final GamePlayerManager gamePlayerManager;  // Manages player data and caching
+    private final SQLManager sqlManager;
+    private final GamePlayerManager gamePlayerManager;
 
-    /**
-     * Constructs the PlayerModule with dependencies provided by the HotPotato plugin.
-     *
-     * @param hotPotato The main HotPotato plugin instance
-     */
     public PlayerModule(HotPotato hotPotato) {
-        super(hotPotato, "Player"); // Initializes the module with the name "Player"
+        super(hotPotato, "Player");
 
         // Retrieves the SQL manager and initializes the GamePlayerManager with Redis and logging
         this.sqlManager = this.getHotPotato().getSqlManager();
@@ -46,7 +41,7 @@ public class PlayerModule extends CustomModule {
     public void activate() {
         // Registers event listeners for handling player join and quit events
         setListeners(Arrays.asList(new PlayerJoinListener(this), new PlayerQuitListener(this)));
-        start(); // Starts additional module-specific tasks (if any)
+        start();
     }
 
     /**
@@ -56,6 +51,6 @@ public class PlayerModule extends CustomModule {
     @Override
     public void deactivate() {
         // Ensures that all cached player data is saved and the Redis pool is closed
-        gamePlayerManager.shutdown();
+        this.gamePlayerManager.shutdown();
     }
 }

@@ -14,13 +14,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerJoinListener implements Listener {
 
-    private final PlayerModule playerModule; // Reference to the parent player module.
+    private final PlayerModule playerModule;
 
-    /**
-     * Constructor for the PlayerJoinListener.
-     *
-     * @param playerModule The player module instance providing access to the GamePlayerManager.
-     */
     public PlayerJoinListener(PlayerModule playerModule) {
         this.playerModule = playerModule;
     }

@@ -15,7 +15,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class SQLManager {
 
-    private final HikariDataSource hikariDataSource; // HikariCP DataSource for managing database connections
+    private final HotPotato hotPotato;
+    private final HikariDataSource hikariDataSource;
 
     /**
      * Constructor for initializing the SQLManager and establishing a connection to the MySQL database.
@@ -24,8 +25,9 @@ public class SQLManager {
      *
      * @param configManager The ConfigManager instance to load database configuration settings
      */
-    public SQLManager(ConfigManager configManager) {
-        // Load the database configuration from the provided ConfigManager
+    public SQLManager(HotPotato hotPotato, ConfigManager configManager) {
+        this.hotPotato = hotPotato;
+
         FileConfiguration fileConfiguration = configManager.getConfig();
         HikariConfig hikariConfig = new HikariConfig();
 
@@ -45,7 +47,7 @@ public class SQLManager {
         this.hikariDataSource = new HikariDataSource(hikariConfig);
 
         // Log successful database connection
-        HotPotato.instance.getLogger().info("Successfully connected to the database.");
+        this.hotPotato.getLogger().info("Successfully connected to the database.");
 
         // Create the 'hotpotato' table if it doesn't exist
         createTable("hotpotato", "id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -70,7 +72,7 @@ public class SQLManager {
                 connection.createStatement().execute(query);
             } catch (SQLException e) {
                 // Log an error if there is an issue executing the query
-                HotPotato.instance.getLogger().severe("Error executing query: " + query);
+                this.hotPotato.getLogger().severe("Error executing query: " + query);
                 e.printStackTrace(); // Print the stack trace for debugging
             }
         });
@@ -83,7 +85,7 @@ public class SQLManager {
      * @throws SQLException If a connection cannot be established
      */
     public Connection getConnection() throws SQLException {
-        return hikariDataSource.getConnection(); // Return a connection from the connection pool
+        return this.hikariDataSource.getConnection();
     }
 
     /**
@@ -91,8 +93,8 @@ public class SQLManager {
      */
     public void close() {
         // Ensure the DataSource is not already closed before attempting to close it
-        if (hikariDataSource != null && !hikariDataSource.isClosed()) {
-            hikariDataSource.close(); // Close the DataSource and release resources
+        if (this.hikariDataSource != null && !this.hikariDataSource.isClosed()) {
+            this.hikariDataSource.close(); // Close the DataSource and release resources
         }
     }
 
@@ -109,10 +111,10 @@ public class SQLManager {
 
         // Execute the query asynchronously
         executeAsync(query).thenRun(() ->
-                HotPotato.instance.getLogger().info("Table '" + tableName + "' has been created or already exists.")
+                this.hotPotato.getLogger().info("Table '" + tableName + "' has been created or already exists.")
         ).exceptionally(e -> {
             // Log an error if there is an issue creating the table
-            HotPotato.instance.getLogger().severe("Error creating table: " + e.getMessage());
+            this.hotPotato.getLogger().severe("Error creating table: " + e.getMessage());
             return null;
         });
     }

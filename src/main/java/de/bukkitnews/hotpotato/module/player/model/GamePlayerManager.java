@@ -17,23 +17,16 @@ import java.util.logging.Logger;
  */
 public class GamePlayerManager {
 
-    private final SQLManager sqlManager; // Handles SQL connections and queries
-    private final JedisPool jedisPool;  // Provides Redis connection pooling
-    private final Logger logger;       // Used for logging information and errors
-    private final Map<String, GamePlayer> playerCache; // In-memory cache for active player data
+    private final SQLManager sqlManager;
+    private final JedisPool jedisPool;
+    private final Logger logger;
+    private final Map<String, GamePlayer> playerCache;
 
-    /**
-     * Initializes the GamePlayerManager with dependencies for SQL, Redis, and logging.
-     *
-     * @param sqlManager The SQLManager instance for database operations.
-     * @param jedisPool  The JedisPool instance for Redis connections.
-     * @param logger     The logger for logging operations.
-     */
     public GamePlayerManager(SQLManager sqlManager, JedisPool jedisPool, Logger logger) {
         this.sqlManager = sqlManager;
         this.jedisPool = jedisPool;
         this.logger = logger;
-        this.playerCache = new ConcurrentHashMap<>(); // Thread-safe cache for player data
+        this.playerCache = new ConcurrentHashMap<>();
     }
 
     /**
@@ -45,7 +38,7 @@ public class GamePlayerManager {
      */
     public CompletableFuture<GamePlayer> loadPlayer(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            try (Jedis jedis = jedisPool.getResource()) {
+            try (Jedis jedis = this.jedisPool.getResource()) {
                 // Attempt to retrieve player data from Redis
                 if (jedis.exists(uuid)) {
                     String name = jedis.hget(uuid, "name");
@@ -59,12 +52,12 @@ public class GamePlayerManager {
                     player.setData("playtime", playtime);
                     player.setData("gamesPlayed", gamesPlayed);
 
-                    playerCache.put(uuid, player); // Add player to in-memory cache
-                    logger.info("Loaded player " + uuid + " from Redis.");
+                    this.playerCache.put(uuid, player); // Add player to in-memory cache
+                    this.logger.info("Loaded player " + uuid + " from Redis.");
                     return player;
                 }
             } catch (Exception e) {
-                logger.severe("Error loading player from Redis: " + e.getMessage());
+                this.logger.severe("Error loading player from Redis: " + e.getMessage());
             }
 
             // Fallback to SQL if Redis data is not found
@@ -81,20 +74,20 @@ public class GamePlayerManager {
      */
     public void savePlayer(GamePlayer player) {
         CompletableFuture.runAsync(() -> {
-            try (Jedis jedis = jedisPool.getResource()) {
+            try (Jedis jedis = this.jedisPool.getResource()) {
                 String uuid = player.getUuid();
-                jedis.hset(uuid, "name", (String) player.getData("name"));
+                jedis.hset(uuid, "name", (String) player.getData("name").orElse("null"));
                 jedis.hset(uuid, "wins", String.valueOf(player.getData("wins")));
                 jedis.hset(uuid, "playtime", String.valueOf(player.getData("playtime")));
                 jedis.hset(uuid, "gamesPlayed", String.valueOf(player.getData("gamesPlayed")));
 
-                logger.info("Saved and removed player " + uuid + " to Redis.");
+                this.logger.info("Saved and removed player " + uuid + " to Redis.");
             } catch (Exception exception) {
-                logger.severe("Error saving player to Redis: " + exception.getMessage());
+                this.logger.severe("Error saving player to Redis: " + exception.getMessage());
             }
 
             savePlayerToSQL(player);
-            playerCache.remove(player.getUuid()); // Remove player from cache after saving
+            this.playerCache.remove(player.getUuid());
         });
     }
 
@@ -107,7 +100,7 @@ public class GamePlayerManager {
      */
     private CompletableFuture<GamePlayer> loadPlayerFromSQL(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            try (var connection = sqlManager.getConnection();
+            try (var connection = this.sqlManager.getConnection();
                  var statement = connection.prepareStatement("SELECT * FROM hotpotato WHERE uuid = ?")) {
 
                 statement.setString(1, uuid);
@@ -120,14 +113,14 @@ public class GamePlayerManager {
                     player.setData("playtime", resultSet.getLong("playtime"));
                     player.setData("gamesPlayed", resultSet.getInt("gamesPlayed"));
 
-                    logger.info("Loaded player " + uuid + " from SQL.");
-                    playerCache.put(uuid, player); // Add player to cache
+                    this.logger.info("Loaded player " + uuid + " from SQL.");
+                    this.playerCache.put(uuid, player);
                     return player;
                 } else {
-                    logger.warning("No data found for player " + uuid + " in SQL.");
+                    this.logger.warning("No data found for player " + uuid + " in SQL.");
                 }
             } catch (Exception e) {
-                logger.severe("Error loading player from SQL: " + e.getMessage());
+                this.logger.severe("Error loading player from SQL: " + e.getMessage());
             }
             return null;
         });
@@ -141,22 +134,22 @@ public class GamePlayerManager {
      */
     private void savePlayerToSQL(GamePlayer player) {
         CompletableFuture.runAsync(() -> {
-            try (var connection = sqlManager.getConnection();
+            try (var connection = this.sqlManager.getConnection();
                  var statement = connection.prepareStatement(
                          "INSERT INTO hotpotato (uuid, name, wins, playtime, gamesPlayed) VALUES (?, ?, ?, ?, ?) " +
                                  "ON DUPLICATE KEY UPDATE name = VALUES(name), wins = VALUES(wins), " +
                                  "playtime = VALUES(playtime), gamesPlayed = VALUES(gamesPlayed)")) {
 
                 statement.setString(1, player.getUuid());
-                statement.setString(2, (String) player.getData("name"));
-                statement.setInt(3, (int) player.getData("wins"));
-                statement.setLong(4, (long) player.getData("playtime"));
-                statement.setInt(5, (int) player.getData("gamesPlayed"));
+                statement.setString(2, (String) player.getData("name").orElse(0));
+                statement.setInt(3, (int) player.getData("wins").orElse(0));
+                statement.setLong(4, (long) player.getData("playtime").orElse(0));
+                statement.setInt(5, (int) player.getData("gamesPlayed").orElse(0));
 
                 statement.executeUpdate();
-                logger.info("Saved player " + player.getUuid() + " to SQL.");
+                this.logger.info("Saved player " + player.getUuid() + " to SQL.");
             } catch (Exception e) {
-                logger.severe("Error saving player to SQL: " + e.getMessage());
+                this.logger.severe("Error saving player to SQL: " + e.getMessage());
             }
         });
     }
@@ -168,7 +161,7 @@ public class GamePlayerManager {
      * @return The GamePlayer instance from the cache, or null if not found.
      */
     public GamePlayer getCachedPlayer(String uuid) {
-        return playerCache.get(uuid);
+        return this.playerCache.get(uuid);
     }
 
     /**
@@ -176,15 +169,15 @@ public class GamePlayerManager {
      * This method should be called during application shutdown to ensure all data is persisted.
      */
     public void shutdown() {
-        for (GamePlayer gamePlayer : playerCache.values()) {
+        for (GamePlayer gamePlayer : this.playerCache.values()) {
             if (gamePlayer != null) {
                 savePlayer(gamePlayer);
             } else {
-                logger.warning("Tried to save player but they were not in the cache.");
+                this.logger.warning("Tried to save player but they were not in the cache.");
             }
         }
 
-        jedisPool.close();
-        logger.info("Redis connection pool closed.");
+        this.jedisPool.close();
+        this.logger.info("Redis connection pool closed.");
     }
 }

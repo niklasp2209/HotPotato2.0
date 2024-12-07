@@ -15,13 +15,9 @@ public final class ModuleManager {
     private final HotPotato hotPotato;
     private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
 
-    /**
-     * Constructor initializes the HotPotato application instance and an empty list for modules.
-     * @param hotPotato The HotPotato instance required for managing modules.
-     */
     public ModuleManager(HotPotato hotPotato){
         this.hotPotato = hotPotato;
-        modules = new LinkedHashMap<>();
+        this.modules = new LinkedHashMap<>();
     }
 
     /**
@@ -29,8 +25,8 @@ public final class ModuleManager {
      * This method is responsible for starting all modules in the system.
      */
     public void activateModules(){
-        modules.put(GameModule.class, new GameModule(hotPotato));
-        modules.put(PlayerModule.class, new PlayerModule(hotPotato));
+        this.modules.put(GameModule.class, new GameModule(this.hotPotato));
+        this.modules.put(PlayerModule.class, new PlayerModule(this.hotPotato));
 
         loadModules();
     }
@@ -47,7 +43,7 @@ public final class ModuleManager {
      * Loads all modules into the system by invoking their activation methods.
      */
     private void loadModules(){
-        modules.forEach((moduleClass, customModuleInstance) -> {
+        this.modules.forEach((moduleClass, customModuleInstance) -> {
             customModuleInstance.activate();
         });
     }
@@ -56,10 +52,10 @@ public final class ModuleManager {
      * Removes all modules from the system by calling their deactivation methods.
      */
     private void unloadModules() {
-        modules.forEach((moduleClass, customModuleInstance) -> {
+        this.modules.forEach((moduleClass, customModuleInstance) -> {
             customModuleInstance.deactivate();
         });
-        modules.clear();
+        this.modules.clear();
     }
 
     /**
@@ -68,6 +64,6 @@ public final class ModuleManager {
      * @return The requested module if it exists, otherwise null.
      */
     public CustomModule getModule(Class<? extends CustomModule> moduleClass) {
-        return modules.get(moduleClass);
+        return this.modules.get(moduleClass);
     }
 }

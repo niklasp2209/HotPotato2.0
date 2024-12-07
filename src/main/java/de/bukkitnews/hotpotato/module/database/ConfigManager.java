@@ -13,20 +13,15 @@ import java.io.IOException;
  * exists and is accessible.
  */
 public class ConfigManager {
-    private final HotPotato hotPotato; // The instance of the HotPotato plugin to access plugin-specific methods and resources
-    private final String fileName; // The name of the configuration file
-    private File configFile; // The File object representing the configuration file on disk
-    private FileConfiguration fileConfiguration; // The configuration object that holds the configuration data
+    private final HotPotato hotPotato;
+    private final String fileName;
+    private File configFile;
+    private FileConfiguration fileConfiguration;
 
-    /**
-     * Constructor that initializes the ConfigManager with the plugin instance and the configuration file name.
-     * @param hotPotato The instance of the HotPotato plugin
-     * @param fileName The name of the configuration file to manage
-     */
     public ConfigManager(HotPotato hotPotato, String fileName) {
         this.hotPotato = hotPotato;
         this.fileName = fileName;
-        setup(); // Calls the setup method to initialize the configuration file
+        setup();
     }
 
     /**
@@ -40,8 +35,8 @@ public class ConfigManager {
 
         // If the configuration file does not exist, create the necessary directories and save the default resource
         if (!configFile.exists()) {
-            hotPotato.getDataFolder().mkdirs(); // Ensure the data folder exists
-            hotPotato.saveResource(fileName, false); // Save the default configuration file from the plugin's resources
+            hotPotato.getDataFolder().mkdirs();
+            hotPotato.saveResource(fileName, false);
         }
 
         // Load the configuration file into the fileConfiguration object
@@ -61,11 +56,11 @@ public class ConfigManager {
      */
     public void save() {
         try {
-            fileConfiguration.save(configFile); // Attempt to save the configuration file to disk
+            fileConfiguration.save(configFile);
         } catch (IOException e) {
             // Log an error if saving fails
             hotPotato.getLogger().severe("Could not save config file: " + fileName);
-            e.printStackTrace(); // Print the stack trace for debugging purposes
+            e.printStackTrace();
         }
     }
 
