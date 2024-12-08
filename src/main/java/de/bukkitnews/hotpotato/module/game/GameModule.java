@@ -9,55 +9,39 @@ import de.bukkitnews.hotpotato.module.game.gamestate.lobby.LobbyState;
 import de.bukkitnews.hotpotato.module.game.listener.AsyncPlayerChatListener;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerJoinListener;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerQuitListener;
+import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
+import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class GameModule extends CustomModule {
 
-    private CustomGameStates currentState;
-    private final Collection<CustomGameStates> loadedGameStates;
-
-    private final List<Player> spectator;
-    private final List<Player> alive;
+    private Optional<CustomGameStates> currentState;
 
     public GameModule(HotPotato hotPotato) {
         super(hotPotato, "Game");
-        this.loadedGameStates = new ArrayList<>();
-        this.spectator = new ArrayList<>();
-        this.alive = new ArrayList<>();
-
-        // Initialisieren und Hinzufügen der GameStates
-        this.loadedGameStates.add(new LobbyState(this));
-        this.loadedGameStates.add(new IngameState(this));
-        this.loadedGameStates.add(new EndingState(this));
+        this.currentState = Optional.empty();
     }
 
     @Override
     public void activate() {
-        this.currentState = this.loadedGameStates.stream()
-                .filter(state -> state.getName().equals("Lobby"))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Lobby state not found"));
+        this.currentState = Optional.of(new LobbyState(this));
 
         setListeners(Arrays.asList(new AsyncPlayerChatListener(this)));
 
-        this.currentState.start();
+        this.currentState.get().start();
     }
 
     @Override
     public void deactivate() {
-        if (this.currentState != null) {
-            this.currentState.stop();
-        }
+        currentState.ifPresent(CustomGameStates::stop);
     }
 
-    public void addGameState(CustomGameStates gameState) {
-        this.loadedGameStates.add(gameState);
+    public void setCurrentState(CustomGameStates newState) {
+        this.currentState = Optional.of(newState);
     }
 }

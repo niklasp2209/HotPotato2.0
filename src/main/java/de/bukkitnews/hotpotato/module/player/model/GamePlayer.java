@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.player.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +10,17 @@ import java.util.Optional;
 /**
  * Represents a player with a UUID and dynamic player data stored in a key-value map.
  */
-@Getter
+@Getter @Setter
 public class GamePlayer {
 
     private final String uuid;
     private final Map<String, Object> data;
+    private boolean alive;
 
     public GamePlayer(String uuid) {
         this.uuid = uuid;
         this.data = new HashMap<>();
+        this.alive = true;
     }
 
     /**

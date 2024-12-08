@@ -1,6 +1,5 @@
 package de.bukkitnews.hotpotato.module.arena.model;
 
-import de.bukkitnews.hotpotato.HotPotato;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
