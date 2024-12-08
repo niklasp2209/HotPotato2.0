@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public class ItemBuilder {
+public class ItemUtil {
 
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
@@ -17,7 +17,7 @@ public class ItemBuilder {
      * Constructs an ItemBuilder with the specified material.
      * @param material The material of the item to be created.
      */
-    public ItemBuilder(Material material){
+    public ItemUtil(Material material){
         this.itemStack = new ItemStack(material);
         this.itemMeta = this.itemStack.getItemMeta();
     }
@@ -27,7 +27,7 @@ public class ItemBuilder {
      * @param name The display name to set.
      * @return The current ItemBuilder instance for chaining.
      */
-    public ItemBuilder setDisplayname(final String name){
+    public ItemUtil setDisplayname(final String name){
         this.itemMeta.setDisplayName(name);
         return this;
     }
@@ -38,7 +38,7 @@ public class ItemBuilder {
      * @param level The level of the enchantment.
      * @return The current ItemBuilder instance for chaining.
      */
-    public ItemBuilder addEnchantment (Enchantment enchantment, int level){
+    public ItemUtil addEnchantment (Enchantment enchantment, int level){
         this.itemMeta.addEnchant(enchantment, level, true);
         this.itemStack.addUnsafeEnchantment(enchantment, level);
         return this;
@@ -49,7 +49,7 @@ public class ItemBuilder {
      * @param amount The amount to set.
      * @return The current ItemBuilder instance for chaining.
      */
-    public ItemBuilder setAmount (final int amount){
+    public ItemUtil setAmount (final int amount){
         this.itemStack.setAmount(amount);
         return this;
     }
@@ -59,7 +59,7 @@ public class ItemBuilder {
      * @param lore The lore to set.
      * @return The current ItemBuilder instance for chaining.
      */
-    public ItemBuilder setLore (final String... lore) {
+    public ItemUtil setLore (final String... lore) {
         this.itemMeta.setLore(Arrays.asList(lore));
         return this;
     }
