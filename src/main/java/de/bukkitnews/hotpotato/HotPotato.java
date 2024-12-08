@@ -7,6 +7,12 @@ import de.bukkitnews.hotpotato.utils.MessageUtil;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This is the main class for the "HotPotato" plugin,
+ * developed as part of the BukkitNews project.
+ *
+ * Created on: 06.12.2024
+ */
 @Getter
 public class HotPotato extends JavaPlugin {
 
@@ -16,6 +22,10 @@ public class HotPotato extends JavaPlugin {
     private SQLManager sqlManager;
     private ModuleManager moduleManager;
 
+    /**
+     * This method is called when the server starts and the plugin is loaded.
+     * It initializes configuration managers, loads messages, and prepares SQL and module managers.
+     */
     @Override
     public void onLoad(){
         this.sqlConfigManager = new ConfigManager(this, "mysql.yml");

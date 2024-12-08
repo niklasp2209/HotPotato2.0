@@ -30,6 +30,7 @@ public class AsyncPlayerChatListener implements Listener {
 
         if (gameModule.getSpectator().contains(player)) {
             event.setCancelled(true);
+            return;
         }
 
         event.setFormat("§a%1$s §8» §7%2$s");

@@ -5,23 +5,17 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @UtilityClass
 public class MessageUtil {
 
     private static final Map<String, String> messages = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(MessageUtil.class.getName());
-
-    // Example key constants for frequently used messages
-    public static final String PREFIX = "prefix";
-    public static final String NO_PERMISSION_KEY = "no_permission";
-    public static final String PLAYER_JOIN_KEY = "player_join";
-    public static final String PLAYER_QUIT_KEY = "player_quit";
 
     /**
      * Loads messages from the configuration file.
@@ -36,14 +30,16 @@ public class MessageUtil {
             return;
         }
 
-        for (String key : config.getConfigurationSection("messages").getKeys(false)) {
-            String message = config.getString("messages." + key, "");
-            if (message.isEmpty()) {
-                LOGGER.log(Level.WARNING, "Empty message found for key '" + key + "' in the configuration.");
-            } else {
-                messages.put(key, message);
-            }
-        }
+        config.getConfigurationSection("messages").getKeys(false).stream()
+                .filter(key -> {
+                    String message = config.getString("messages." + key, "");
+                    if (message.isEmpty()) {
+                        LOGGER.log(Level.WARNING, "Empty message found for key '" + key + "' in the configuration.");
+                        return false;
+                    }
+                    messages.put(key, message);
+                    return true;
+                }).forEach(key -> {});
     }
 
     /**
@@ -91,11 +87,11 @@ public class MessageUtil {
      * @return The number of placeholders.
      */
     private static int countPlaceholders(String template) {
+        Pattern pattern = Pattern.compile("%s");
+        Matcher matcher = pattern.matcher(template);
         int count = 0;
-        for (int i = 0; i < template.length() - 2; i++) {
-            if (template.charAt(i) == '%' && template.charAt(i + 1) == 's') {
-                count++;
-            }
+        while (matcher.find()) {
+            count++;
         }
         return count;
     }

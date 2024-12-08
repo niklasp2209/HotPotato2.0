@@ -67,16 +67,18 @@ public class ItemUtil {
     /**
      * Makes the item unbreakable.
      */
-    public void setUnbreakable(){
-        itemMeta.setUnbreakable(true);
+    public ItemUtil setUnbreakable(){
+        this.itemMeta.setUnbreakable(true);
+        return this;
     }
 
     /**
      * Makes the item glow by adding a hidden enchantment.
      */
-    public void setGlowing(){
-        itemMeta.addEnchant(Enchantment.UNBREAKING, 0, true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+    public ItemUtil setGlowing(){
+        this.itemMeta.addEnchant(Enchantment.UNBREAKING, 0, true);
+        this.itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        return this;
     }
 
     /**
