@@ -3,7 +3,7 @@ package de.bukkitnews.hotpotato.module.arena;
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
-import de.bukkitnews.hotpotato.module.arena.voting.VotingManager;
+import de.bukkitnews.hotpotato.module.arena.voting.Voting;
 import de.bukkitnews.hotpotato.module.database.ConfigManager;
 import lombok.Getter;
 
@@ -17,7 +17,7 @@ public class ArenaModule extends CustomModule {
     private final ConfigManager arenaConfig;
     private final HotPotato hotPotato;
 
-    private VotingManager votingManager;
+    private Voting voting;
 
     private final List<Arena> arenaList = new ArrayList<>();
 
@@ -31,7 +31,9 @@ public class ArenaModule extends CustomModule {
 
     @Override
     public void activate() {
-        this.votingManager = new VotingManager(this);
+        this.voting = new Voting(this);
+
+        this.voting.initVoting();
     }
 
     @Override
