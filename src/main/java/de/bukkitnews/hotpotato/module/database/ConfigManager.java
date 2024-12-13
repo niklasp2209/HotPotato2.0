@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.database;
 
 import de.bukkitnews.hotpotato.HotPotato;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
