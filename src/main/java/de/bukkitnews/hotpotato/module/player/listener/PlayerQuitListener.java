@@ -3,6 +3,7 @@ package de.bukkitnews.hotpotato.module.player.listener;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -35,7 +36,7 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
         // Retrieve the GamePlayerManager instance
-        GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
+        GamePlayerManager gamePlayerManager = PlayerModule.gamePlayerManager;
 
         // Get the UUID of the player who quit
         String uuid = event.getPlayer().getUniqueId().toString();

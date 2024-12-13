@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.game.listener;
 
-import de.bukkitnews.hotpotato.module.game.GameModule;
+import de.bukkitnews.hotpotato.module.player.PlayerModule;
+import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,12 +13,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class AsyncPlayerChatListener implements Listener {
 
-    private final GameModule gameModule;
-
-    public AsyncPlayerChatListener(GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
-
     /**
      * Handles the asynchronous player chat event.
      *
@@ -27,8 +22,9 @@ public class AsyncPlayerChatListener implements Listener {
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+        GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
 
-        if (gameModule.getSpectator().contains(player)) {
+        if (!gamePlayer.isAlive()) {
             event.setCancelled(true);
             return;
         }

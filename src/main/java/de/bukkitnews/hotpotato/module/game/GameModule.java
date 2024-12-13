@@ -31,7 +31,7 @@ public class GameModule extends CustomModule {
     public void activate() {
         this.currentState = Optional.of(new LobbyState(this));
 
-        setListeners(Arrays.asList(new AsyncPlayerChatListener(this)));
+        setListeners(Arrays.asList(new AsyncPlayerChatListener()));
 
         this.currentState.get().start();
     }
@@ -42,6 +42,7 @@ public class GameModule extends CustomModule {
     }
 
     public void setCurrentState(CustomGameStates newState) {
+        this.currentState.ifPresent(CustomGameStates::deactivate);
         this.currentState = Optional.of(newState);
     }
 }

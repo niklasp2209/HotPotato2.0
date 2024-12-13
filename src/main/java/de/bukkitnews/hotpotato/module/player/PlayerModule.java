@@ -22,14 +22,13 @@ import java.util.Arrays;
 public class PlayerModule extends CustomModule {
 
     private final SQLManager sqlManager;
-    private final GamePlayerManager gamePlayerManager;
+    public static GamePlayerManager gamePlayerManager;
 
     public PlayerModule(HotPotato hotPotato) {
         super(hotPotato, "Player");
 
-        // Retrieves the SQL manager and initializes the GamePlayerManager with Redis and logging
         this.sqlManager = this.getHotPotato().getSqlManager();
-        this.gamePlayerManager = new GamePlayerManager(
+        gamePlayerManager = new GamePlayerManager(
                 sqlManager, new JedisPool("localhost", 6379), this.getHotPotato().getLogger());
     }
 
@@ -39,7 +38,6 @@ public class PlayerModule extends CustomModule {
      */
     @Override
     public void activate() {
-        // Registers event listeners for handling player join and quit events
         setListeners(Arrays.asList(new PlayerJoinListener(this), new PlayerQuitListener(this)));
         start();
     }
@@ -50,7 +48,6 @@ public class PlayerModule extends CustomModule {
      */
     @Override
     public void deactivate() {
-        // Ensures that all cached player data is saved and the Redis pool is closed
         this.gamePlayerManager.shutdown();
     }
 }

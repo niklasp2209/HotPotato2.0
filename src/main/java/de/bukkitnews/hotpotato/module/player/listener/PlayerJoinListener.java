@@ -29,15 +29,11 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
-        // Access the GamePlayerManager to handle player data.
-        GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
-        // Retrieve the player's unique identifier (UUID).
+        GamePlayerManager gamePlayerManager = PlayerModule.gamePlayerManager;
         String uuid = event.getPlayer().getUniqueId().toString();
 
-        // Load the player's data asynchronously.
         gamePlayerManager.loadPlayer(uuid).thenAccept(gamePlayer -> {
             if (gamePlayer != null) {
-                // Update the player's name with their current in-game name.
                 gamePlayer.setData("name", event.getPlayer().getName());
             }
         });

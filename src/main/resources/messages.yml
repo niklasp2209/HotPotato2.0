@@ -1,2 +1,11 @@
 messages:
   prefix: "&aHotPotato";
+  setup_arena_exists: "Diese Arena gibt es bereits"
+  setup_arena_spawn: "Nutze /hotpotato setup <Name> Spawn um den Spawn zu setzen"
+  voting_already: "Du hast bereits gevotet"
+  voting_map: "Du hast für %s abgestimmt"
+  inventory_voting: "Abstimmung"
+  idling_message: "Es werden noch Spieler zum Spielstart benötigt"
+  lobbytask_remaining: "Das Spiel startet in %s Sekunden"
+  lobbytask_remaining1: "Das Spiel startet in %s Sekunde"
+  lobbytask_voting: "Die Arena %s hat das Voting gewonnen."

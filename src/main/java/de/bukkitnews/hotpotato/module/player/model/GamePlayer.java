@@ -16,11 +16,13 @@ public class GamePlayer {
     private final String uuid;
     private final Map<String, Object> data;
     private boolean alive;
+    private boolean voted;
 
     public GamePlayer(String uuid) {
         this.uuid = uuid;
         this.data = new HashMap<>();
         this.alive = true;
+        this.voted = false;
     }
 
     /**

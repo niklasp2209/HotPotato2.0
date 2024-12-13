@@ -4,8 +4,10 @@ import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
+import de.bukkitnews.hotpotato.module.scoreboard.ScoreboardModule;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 /**
  * Manages and controls the lifecycle of modules within the HotPotato application.
@@ -29,6 +31,7 @@ public final class ModuleManager {
         this.modules.put(GameModule.class, new GameModule(this.hotPotato));
         this.modules.put(PlayerModule.class, new PlayerModule(this.hotPotato));
         this.modules.put(ArenaModule.class, new ArenaModule(this.hotPotato));
+        this.modules.put(ScoreboardModule.class, new ScoreboardModule(this.hotPotato));
 
         loadModules();
     }
@@ -65,7 +68,8 @@ public final class ModuleManager {
      * @param moduleClass The class of the module to be retrieved.
      * @return The requested module if it exists, otherwise null.
      */
-    public CustomModule getModule(Class<? extends CustomModule> moduleClass) {
-        return this.modules.get(moduleClass);
+    public Optional<CustomModule> getModule(Class<? extends CustomModule> moduleClass) {
+        return Optional.ofNullable(modules.get(moduleClass));
     }
+
 }

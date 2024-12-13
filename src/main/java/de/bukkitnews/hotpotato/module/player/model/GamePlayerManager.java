@@ -39,7 +39,6 @@ public class GamePlayerManager {
     public CompletableFuture<GamePlayer> loadPlayer(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try (Jedis jedis = this.jedisPool.getResource()) {
-                // Attempt to retrieve player data from Redis
                 if (jedis.exists(uuid)) {
                     String name = jedis.hget(uuid, "name");
                     int wins = Integer.parseInt(jedis.hget(uuid, "wins"));
