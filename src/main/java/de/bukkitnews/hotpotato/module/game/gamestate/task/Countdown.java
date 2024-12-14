@@ -1,9 +1,13 @@
 package de.bukkitnews.hotpotato.module.game.gamestate.task;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Abstract Countdown class representing a countdown timer.
  * Subclasses must define the behavior for starting and stopping the countdown.
  */
+
 public abstract class Countdown {
 
     /**
@@ -15,7 +19,7 @@ public abstract class Countdown {
     /**
      * The number of seconds remaining in the countdown.
      */
-    protected int seconds;
+    @Getter @Setter protected int seconds;
 
     /**
      * Starts the countdown timer.

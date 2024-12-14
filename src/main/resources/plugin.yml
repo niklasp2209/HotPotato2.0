@@ -4,3 +4,9 @@ version: '${project.version}'
 main: de.bukkitnews.hotpotato.HotPotato
 api-version: 1.21
 commands:
+  hotpotato:
+    description: HotPotato-Command
+  stats:
+    description: Stats-Command
+  start:
+    description: Start-Command

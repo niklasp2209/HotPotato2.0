@@ -1,8 +1,10 @@
 package de.bukkitnews.hotpotato.module.game.listener;
 
+import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.util.GameItems;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -31,8 +33,18 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        if (event.getItem().isSimilar(GameItems.ITEM_LOBBY_VOTING)) {
+        Player player = event.getPlayer();
+        event.setCancelled(true);
 
+        if (event.getItem().isSimilar(GameItems.ITEM_LOBBY_VOTING)) {
+            this.gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get()
+                    .getVoting().createVotingInventory(player);
+            return;
+        }
+
+        if(event.getItem().isSimilar(GameItems.ITEM_LOBBY_LEAVE)){
+            player.kickPlayer(null);
+            return;
         }
     }
 }

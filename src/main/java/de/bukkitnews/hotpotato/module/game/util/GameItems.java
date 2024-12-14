@@ -8,6 +8,11 @@ public class GameItems {
 
     public static final ItemStack ITEM_LOBBY_VOTING = new ItemUtil(Material.PAPER)
             .setDisplayname("Map Voting")
-            .setLore("§r", "§7Rechtsklick zum öffnen.")
+            .setLore(" ", "Rechtsklick zum öffnen.")
+            .build();
+
+    public static final ItemStack ITEM_LOBBY_LEAVE = new ItemUtil(Material.MAGMA_CREAM)
+            .setDisplayname("Runde verlassen")
+            .setLore(" ", "Rechtsklick zum verlassen.")
             .build();
 }

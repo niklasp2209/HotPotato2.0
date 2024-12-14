@@ -2,7 +2,7 @@ package de.bukkitnews.hotpotato.module.game.gamestate.ingame.task;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.task.Countdown;
-import de.bukkitnews.hotpotato.module.packet.PacketUtil;
+import de.bukkitnews.hotpotato.util.PacketUtil;
 import lombok.NonNull;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;

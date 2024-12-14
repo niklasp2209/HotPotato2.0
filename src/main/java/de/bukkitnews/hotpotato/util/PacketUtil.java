@@ -1,4 +1,4 @@
-package de.bukkitnews.hotpotato.module.packet;
+package de.bukkitnews.hotpotato.util;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;

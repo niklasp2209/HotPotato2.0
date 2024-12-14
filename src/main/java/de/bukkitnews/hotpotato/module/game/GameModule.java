@@ -2,6 +2,9 @@ package de.bukkitnews.hotpotato.module.game;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
+import de.bukkitnews.hotpotato.module.game.commands.HotPotatoCommand;
+import de.bukkitnews.hotpotato.module.game.commands.StartCommand;
+import de.bukkitnews.hotpotato.module.game.commands.StatsCommand;
 import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
 import de.bukkitnews.hotpotato.module.game.gamestate.ending.EndingState;
 import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
@@ -61,6 +64,11 @@ public class GameModule extends CustomModule {
                 new PlayerConnectionListener(this),
                 new PlayerInteractListener(this)
         ));
+
+        getCommandExecutors().put("hotpotato", new HotPotatoCommand());
+        getCommandExecutors().put("start", new StartCommand(this));
+        getCommandExecutors().put("stats", new StatsCommand(this));
+
         this.currentState.ifPresent(CustomGameStates::start);
     }
 

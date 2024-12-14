@@ -20,7 +20,7 @@ public final class ModuleManager {
     private final HotPotato hotPotato;
     private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
 
-    public ModuleManager(@NonNull HotPotato hotPotato){
+    public ModuleManager(@NonNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;
         this.modules = new LinkedHashMap<>();
     }
@@ -29,7 +29,7 @@ public final class ModuleManager {
      * Activates all modules in the module list by calling their enable method.
      * This method is responsible for starting all modules in the system.
      */
-    public void activateModules(){
+    public void activateModules() {
         this.modules.put(GameModule.class, new GameModule(this.hotPotato));
         this.modules.put(PlayerModule.class, new PlayerModule(this.hotPotato));
         this.modules.put(ArenaModule.class, new ArenaModule(this.hotPotato));
@@ -42,14 +42,14 @@ public final class ModuleManager {
      * Deactivates all modules by calling their stop method.
      * This method removes all modules from the system.
      */
-    public void deactivateModules(){
+    public void deactivateModules() {
         unloadModules();
     }
 
     /**
      * Loads all modules into the system by invoking their activation methods.
      */
-    private void loadModules(){
+    private void loadModules() {
         this.modules.forEach((moduleClass, customModuleInstance) -> {
             customModuleInstance.activate();
         });
@@ -67,11 +67,12 @@ public final class ModuleManager {
 
     /**
      * Retrieves a specific module by its class.
+     *
      * @param moduleClass The class of the module to be retrieved.
      * @return The requested module if it exists, otherwise null.
      */
-    public <T extends CustomModule> Optional<T> getModule(Class<T> moduleClass){
-        return Optional.ofNullable((T)modules.get(moduleClass));
+    public <T extends CustomModule> Optional<T> getModule(Class<T> moduleClass) {
+        return Optional.ofNullable((T) modules.get(moduleClass));
     }
 
 }
