@@ -10,6 +10,7 @@ import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerJoinListener;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerQuitListener;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class ArenaModule extends CustomModule {
 
     private final List<Arena> arenaList = new ArrayList<>();
 
-    public ArenaModule(HotPotato hotPotato) {
+    public ArenaModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Arena");
 
         instance = this;

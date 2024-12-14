@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.game.listener;
 
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +21,7 @@ public class AsyncPlayerChatListener implements Listener {
      * formats the chat message for others.
      */
     @EventHandler
-    public void handleChat(AsyncPlayerChatEvent event) {
+    public void handleChat(@NonNull AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
 

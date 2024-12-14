@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.game.commands;
 
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.utils.MessageUtil;
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player;
 public class HotPotatoCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if(!(sender instanceof Player)){
             return true;
         }

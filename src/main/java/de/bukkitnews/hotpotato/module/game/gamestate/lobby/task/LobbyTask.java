@@ -1,17 +1,14 @@
 package de.bukkitnews.hotpotato.module.game.gamestate.lobby.task;
 
-import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.events.VotingFinishedEvent;
-import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
 import de.bukkitnews.hotpotato.module.game.gamestate.task.Countdown;
 import de.bukkitnews.hotpotato.utils.MessageUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 
 @Getter @Setter
 public class LobbyTask extends Countdown {
@@ -23,12 +20,16 @@ public class LobbyTask extends Countdown {
     private final int COUNT_DURATION = 60;
     private final int IDLE_TIME = 15;
 
-    public LobbyTask(GameModule gameModule) {
+    public LobbyTask(@NonNull GameModule gameModule) {
         this.gameModule = gameModule;
+
+        startIdle();
     }
 
     @Override
     public void start() {
+        stopIdle();
+
         this.seconds = COUNT_DURATION;
         this.isRunning = true;
 
@@ -77,6 +78,7 @@ public class LobbyTask extends Countdown {
     }
 
     public void startIdle(){
+        stop();
         this.isIdling = true;
 
         this.idleId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.gameModule.getHotPotato(), new Runnable() {

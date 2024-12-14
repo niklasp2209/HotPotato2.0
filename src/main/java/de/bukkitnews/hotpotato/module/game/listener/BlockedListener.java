@@ -1,5 +1,6 @@
 package de.bukkitnews.hotpotato.module.game.listener;
 
+import lombok.NonNull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -15,7 +16,7 @@ public class BlockedListener implements Listener {
      * @param event The BlockBreakEvent that was triggered.
      */
     @EventHandler
-    public void handleBlockBreak(BlockBreakEvent event){
+    public void handleBlockBreak(@NonNull BlockBreakEvent event){
         event.setCancelled(true);
     }
 
@@ -24,7 +25,7 @@ public class BlockedListener implements Listener {
      * @param event The BlockPlaceEvent that was triggered.
      */
     @EventHandler
-    public void handleBlockPlace(BlockPlaceEvent event){
+    public void handleBlockPlace(@NonNull BlockPlaceEvent event){
         event.setCancelled(true);
     }
 
@@ -33,7 +34,7 @@ public class BlockedListener implements Listener {
      * @param event The EntitySpawnEvent that was triggered.
      */
     @EventHandler
-    public void handleEntitySpawn(EntitySpawnEvent event){
+    public void handleEntitySpawn(@NonNull EntitySpawnEvent event){
         event.setCancelled(true);
     }
 
@@ -42,7 +43,7 @@ public class BlockedListener implements Listener {
      * @param event The FoodLevelChangeEvent that was triggered.
      */
     @EventHandler
-    public void handleFoodChange(FoodLevelChangeEvent event){
+    public void handleFoodChange(@NonNull FoodLevelChangeEvent event){
         event.setCancelled(true);
     }
 
@@ -51,7 +52,7 @@ public class BlockedListener implements Listener {
      * @param event The EntityDamageEvent that was triggered.
      */
     @EventHandler
-    public void handleEntityDamage(EntityDamageEvent event){
+    public void handleEntityDamage(@NonNull EntityDamageEvent event){
         event.setCancelled(true);
     }
 }

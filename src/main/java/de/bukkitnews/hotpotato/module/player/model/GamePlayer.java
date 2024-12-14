@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.player.model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class GamePlayer {
      * @param key   the data key (e.g., "wins")
      * @param value the value to store
      */
-    public void setData(String key, Object value) {
+    public void setData(@NonNull String key, @NonNull Object value) {
         this.data.put(key, value);
     }
 
@@ -41,7 +42,7 @@ public class GamePlayer {
      * @param key the data key
      * @return an Optional containing the value, or an empty Optional if not found
      */
-    public Optional<Object> getData(String key) {
+    public Optional<Object> getData(@NonNull String key) {
         return Optional.ofNullable(this.data.get(key));
     }
 
@@ -49,25 +50,32 @@ public class GamePlayer {
      * Increments the player's win count by 1.
      */
     public void increaseWins() {
-        int currentWins = getData("wins").map(value -> (int) value).orElse(0);
-        setData("wins", currentWins + 1);
+        getData("wins").map(value -> (int) value).ifPresentOrElse(
+                currentWins -> setData("wins", currentWins + 1),
+                () -> setData("wins", 1)
+        );
     }
 
     /**
      * Increments the player's games played count by 1.
      */
     public void increaseGamesPlayed() {
-        int currentGames = getData("gamesPlayed").map(value -> (int) value).orElse(0);
-        setData("gamesPlayed", currentGames + 1);
+        getData("gamesPlayed").map(value -> (int) value).ifPresentOrElse(
+                currentGames -> setData("gamesPlayed", currentGames + 1),
+                () -> setData("gamesPlayed", 1)
+        );
     }
 
     /**
      * Increases the player's playtime by a specified amount.
+     * Playtime is in minutes
      *
      * @param amount the playtime to add
      */
     public void increasePlaytime(long amount) {
-        long currentPlaytime = getData("playtime").map(value -> (long) value).orElse(0L);
-        setData("playtime", currentPlaytime + amount);
+        getData("playtime").map(value -> (long) value).ifPresentOrElse(
+                currentPlaytime -> setData("playtime", currentPlaytime + amount),
+                () -> setData("playtime", amount)
+        );
     }
 }

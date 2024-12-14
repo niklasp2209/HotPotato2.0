@@ -7,6 +7,7 @@ import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.utils.ItemUtil;
 import de.bukkitnews.hotpotato.utils.MessageUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -73,7 +74,7 @@ public class Voting {
         return arena;
     }
 
-    public void createVotingInventory(Player player) {
+    public void createVotingInventory(@NonNull Player player) {
         Inventory inventory = Bukkit.createInventory(null, 9, MessageUtil.getMessage("Abstimmung"));
 
         NamespacedKey namespacedKey = new NamespacedKey("hotpotato", "arena_id");
@@ -93,7 +94,7 @@ public class Voting {
     }
 
 
-    public void vote(Player player, Arena arena){
+    public void vote(@NonNull Player player, @NonNull Arena arena){
         GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
 
         if(gamePlayer.isVoted()){

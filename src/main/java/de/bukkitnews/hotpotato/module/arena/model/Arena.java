@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.arena.model;
 
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ public class Arena {
     private Optional<Location> spawnLocation = Optional.empty();
     private int votes;
 
-    public Arena(String name){
+    public Arena(@NonNull String name){
         this.name = name;
 
         load();

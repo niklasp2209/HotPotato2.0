@@ -2,10 +2,11 @@ package de.bukkitnews.hotpotato.module.game.gamestate.ingame;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import lombok.NonNull;
 
 public class IngameState extends CustomGameStates {
 
-    public IngameState(GameModule gameModule) {
+    public IngameState(@NonNull GameModule gameModule) {
         super(gameModule, "Ingame");
     }
 

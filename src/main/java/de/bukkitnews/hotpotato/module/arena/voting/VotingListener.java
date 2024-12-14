@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.arena.voting;
 
 import de.bukkitnews.hotpotato.utils.MessageUtil;
+import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,12 +16,12 @@ public class VotingListener implements Listener {
 
     private final Voting voting;
 
-    public VotingListener(Voting voting) {
+    public VotingListener(@NonNull Voting voting) {
         this.voting = voting;
     }
 
     @EventHandler
-    public void handleInventoryClick(InventoryClickEvent event) {
+    public void handleInventoryClick(@NonNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         if (!event.getView().getTitle().equals(MessageUtil.getMessage("inventory_voting"))) {

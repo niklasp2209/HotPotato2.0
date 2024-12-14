@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +27,7 @@ public abstract class CustomModule {
     private List<Listener> listeners;
     private Map<String, CommandExecutor> commandExecutors;
 
-    public CustomModule(HotPotato hotPotato, String name) {
+    public CustomModule(@NonNull HotPotato hotPotato, @NonNull String name) {
         this.hotPotato = hotPotato;
         this.moduleName = name;
         this.commandExecutors = new HashMap<>();
@@ -114,7 +115,7 @@ public abstract class CustomModule {
      *
      * @param message The message to log.
      */
-    private void logToConsole(String message) {
+    private void logToConsole(@NonNull String message) {
         Bukkit.getLogger().info(message);
     }
 }

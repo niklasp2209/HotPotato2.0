@@ -3,10 +3,12 @@ package de.bukkitnews.hotpotato.module.player;
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
 import de.bukkitnews.hotpotato.module.database.SQLManager;
+import de.bukkitnews.hotpotato.module.player.handler.PlaytimeHandler;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerJoinListener;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerQuitListener;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
 import lombok.Getter;
+import lombok.NonNull;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Arrays;
@@ -24,12 +26,14 @@ public class PlayerModule extends CustomModule {
     private final SQLManager sqlManager;
     public static GamePlayerManager gamePlayerManager;
 
-    public PlayerModule(HotPotato hotPotato) {
+    public PlayerModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Player");
 
         this.sqlManager = this.getHotPotato().getSqlManager();
         gamePlayerManager = new GamePlayerManager(
                 sqlManager, new JedisPool("localhost", 6379), this.getHotPotato().getLogger());
+
+        new PlaytimeHandler(this).startHandler();
     }
 
     /**
@@ -48,6 +52,6 @@ public class PlayerModule extends CustomModule {
      */
     @Override
     public void deactivate() {
-        this.gamePlayerManager.shutdown();
+        gamePlayerManager.shutdown();
     }
 }

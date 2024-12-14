@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.database;
 
 import de.bukkitnews.hotpotato.HotPotato;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,7 +20,7 @@ public class ConfigManager {
     private File configFile;
     private FileConfiguration fileConfiguration;
 
-    public ConfigManager(HotPotato hotPotato, String fileName) {
+    public ConfigManager(@NonNull HotPotato hotPotato, @NonNull String fileName) {
         this.hotPotato = hotPotato;
         this.fileName = fileName;
         setup();
@@ -31,16 +32,13 @@ public class ConfigManager {
      * default configuration resource from the plugin's JAR file.
      */
     private void setup() {
-        // Create a File object for the configuration file in the plugin's data folder
         configFile = new File(hotPotato.getDataFolder(), fileName);
 
-        // If the configuration file does not exist, create the necessary directories and save the default resource
         if (!configFile.exists()) {
             hotPotato.getDataFolder().mkdirs();
             hotPotato.saveResource(fileName, false);
         }
 
-        // Load the configuration file into the fileConfiguration object
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 
@@ -59,7 +57,6 @@ public class ConfigManager {
         try {
             fileConfiguration.save(configFile);
         } catch (IOException e) {
-            // Log an error if saving fails
             hotPotato.getLogger().severe("Could not save config file: " + fileName);
             e.printStackTrace();
         }
@@ -69,7 +66,7 @@ public class ConfigManager {
      * Reloads the configuration from the file, refreshing the configuration data.
      */
     public void reload() {
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile); // Reload the configuration from the file
+        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 
     /**
@@ -77,6 +74,6 @@ public class ConfigManager {
      * @return true if the configuration file exists, false otherwise
      */
     public boolean configExists() {
-        return configFile.exists(); // Returns whether the file exists on disk
+        return configFile.exists();
     }
 }

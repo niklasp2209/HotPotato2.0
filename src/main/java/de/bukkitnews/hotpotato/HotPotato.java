@@ -5,6 +5,7 @@ import de.bukkitnews.hotpotato.module.database.ConfigManager;
 import de.bukkitnews.hotpotato.module.database.SQLManager;
 import de.bukkitnews.hotpotato.utils.MessageUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

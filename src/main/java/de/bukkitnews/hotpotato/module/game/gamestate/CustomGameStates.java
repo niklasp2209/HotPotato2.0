@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.game.gamestate;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ public abstract class CustomGameStates {
     private List<Listener> listeners;
     private final String name;
 
-    public CustomGameStates(GameModule gameModule, String name) {
+    public CustomGameStates(@NonNull GameModule gameModule, @NonNull String name) {
         this.gameModule = gameModule;
         this.name = name;
     }
@@ -86,7 +87,7 @@ public abstract class CustomGameStates {
      * Logs a message to the console.
      * @param message The message to log.
      */
-    protected void logToConsole(String message) {
+    protected void logToConsole(@NonNull String message) {
         Bukkit.getLogger().info(message);
     }
 }

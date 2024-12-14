@@ -2,10 +2,11 @@ package de.bukkitnews.hotpotato.module.game.gamestate.ending;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import lombok.NonNull;
 
 public class EndingState extends CustomGameStates {
 
-    public EndingState(GameModule gameModule) {
+    public EndingState(@NonNull GameModule gameModule) {
         super(gameModule, "Ending");
     }
 

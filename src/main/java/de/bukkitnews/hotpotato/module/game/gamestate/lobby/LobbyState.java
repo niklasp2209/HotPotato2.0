@@ -2,11 +2,19 @@ package de.bukkitnews.hotpotato.module.game.gamestate.lobby;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import de.bukkitnews.hotpotato.module.game.gamestate.lobby.task.LobbyTask;
+import lombok.Getter;
+import lombok.NonNull;
 
+@Getter
 public class LobbyState extends CustomGameStates {
 
-    public LobbyState(GameModule gameModule) {
+    private final LobbyTask lobbyTask;
+
+    public LobbyState(@NonNull GameModule gameModule) {
         super(gameModule, "Lobby");
+
+        this.lobbyTask = new LobbyTask(this.getGameModule());
     }
 
     @Override

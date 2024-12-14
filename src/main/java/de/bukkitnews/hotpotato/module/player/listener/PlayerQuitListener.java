@@ -3,6 +3,7 @@ package de.bukkitnews.hotpotato.module.player.listener;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +21,7 @@ public class PlayerQuitListener implements Listener {
 
     private final PlayerModule playerModule;
 
-    public PlayerQuitListener(PlayerModule playerModule) {
+    public PlayerQuitListener(@NonNull PlayerModule playerModule) {
         this.playerModule = playerModule;
     }
 
@@ -34,17 +35,13 @@ public class PlayerQuitListener implements Listener {
      * @param event The {@link PlayerQuitEvent} triggered when a player disconnects.
      */
     @EventHandler
-    public void handleQuit(PlayerQuitEvent event) {
-        // Retrieve the GamePlayerManager instance
+    public void handleQuit(@NonNull PlayerQuitEvent event) {
         GamePlayerManager gamePlayerManager = PlayerModule.gamePlayerManager;
 
-        // Get the UUID of the player who quit
         String uuid = event.getPlayer().getUniqueId().toString();
 
-        // Check if the player exists in the cache
         GamePlayer gamePlayer = gamePlayerManager.getCachedPlayer(uuid);
         if (gamePlayer != null) {
-            // Save the player's data and remove them from the cache
             gamePlayerManager.savePlayer(gamePlayer);
         }
     }

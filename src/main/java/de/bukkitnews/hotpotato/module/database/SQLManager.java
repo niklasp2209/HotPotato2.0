@@ -3,6 +3,7 @@ package de.bukkitnews.hotpotato.module.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.bukkitnews.hotpotato.HotPotato;
+import lombok.NonNull;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
@@ -25,7 +26,7 @@ public class SQLManager {
      *
      * @param configManager The ConfigManager instance to load database configuration settings
      */
-    public SQLManager(HotPotato hotPotato, ConfigManager configManager) {
+    public SQLManager(@NonNull HotPotato hotPotato, @NonNull ConfigManager configManager) {
         this.hotPotato = hotPotato;
 
         FileConfiguration fileConfiguration = configManager.getConfig();
@@ -64,16 +65,12 @@ public class SQLManager {
      * @param query The SQL query to execute
      * @return A CompletableFuture representing the asynchronous operation
      */
-    public CompletableFuture<Void> executeAsync(String query) {
-        // Executes the query asynchronously using a CompletableFuture
+    public CompletableFuture<Void> executeAsync(@NonNull String query) {
         return CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
-                // Execute the SQL query
                 connection.createStatement().execute(query);
             } catch (SQLException e) {
-                // Log an error if there is an issue executing the query
                 this.hotPotato.getLogger().severe("Error executing query: " + query);
-                e.printStackTrace(); // Print the stack trace for debugging
             }
         });
     }
@@ -92,9 +89,8 @@ public class SQLManager {
      * Closes the HikariDataSource, releasing all database connections.
      */
     public void close() {
-        // Ensure the DataSource is not already closed before attempting to close it
         if (this.hikariDataSource != null && !this.hikariDataSource.isClosed()) {
-            this.hikariDataSource.close(); // Close the DataSource and release resources
+            this.hikariDataSource.close();
         }
     }
 
@@ -105,15 +101,12 @@ public class SQLManager {
      * @param tableName The name of the table to create
      * @param tableSchema The schema definition of the table
      */
-    public void createTable(String tableName, String tableSchema) {
-        // Build the SQL query for creating the table
+    public void createTable(@NonNull String tableName, @NonNull String tableSchema) {
         String query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + tableSchema + ");";
 
-        // Execute the query asynchronously
         executeAsync(query).thenRun(() ->
                 this.hotPotato.getLogger().info("Table '" + tableName + "' has been created or already exists.")
         ).exceptionally(e -> {
-            // Log an error if there is an issue creating the table
             this.hotPotato.getLogger().severe("Error creating table: " + e.getMessage());
             return null;
         });

@@ -1,6 +1,8 @@
 package de.bukkitnews.hotpotato.module.player.model;
 
 import de.bukkitnews.hotpotato.module.database.SQLManager;
+import lombok.Getter;
+import lombok.NonNull;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -20,9 +22,9 @@ public class GamePlayerManager {
     private final SQLManager sqlManager;
     private final JedisPool jedisPool;
     private final Logger logger;
-    private final Map<String, GamePlayer> playerCache;
+    @Getter private final Map<String, GamePlayer> playerCache;
 
-    public GamePlayerManager(SQLManager sqlManager, JedisPool jedisPool, Logger logger) {
+    public GamePlayerManager(@NonNull SQLManager sqlManager, @NonNull JedisPool jedisPool, @NonNull Logger logger) {
         this.sqlManager = sqlManager;
         this.jedisPool = jedisPool;
         this.logger = logger;
@@ -36,7 +38,7 @@ public class GamePlayerManager {
      * @param uuid The UUID of the player.
      * @return A CompletableFuture containing the loaded GamePlayer object, or null if no data is found.
      */
-    public CompletableFuture<GamePlayer> loadPlayer(String uuid) {
+    public CompletableFuture<GamePlayer> loadPlayer(@NonNull String uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try (Jedis jedis = this.jedisPool.getResource()) {
                 if (jedis.exists(uuid)) {
@@ -71,7 +73,7 @@ public class GamePlayerManager {
      *
      * @param player The GamePlayer instance to save.
      */
-    public void savePlayer(GamePlayer player) {
+    public void savePlayer(@NonNull GamePlayer player) {
         CompletableFuture.runAsync(() -> {
             try (Jedis jedis = this.jedisPool.getResource()) {
                 String uuid = player.getUuid();
@@ -97,7 +99,7 @@ public class GamePlayerManager {
      * @param uuid The UUID of the player.
      * @return A CompletableFuture containing the loaded GamePlayer object, or null if no data is found.
      */
-    private CompletableFuture<GamePlayer> loadPlayerFromSQL(String uuid) {
+    private CompletableFuture<GamePlayer> loadPlayerFromSQL(@NonNull String uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try (var connection = this.sqlManager.getConnection();
                  var statement = connection.prepareStatement("SELECT * FROM hotpotato WHERE uuid = ?")) {
@@ -131,7 +133,7 @@ public class GamePlayerManager {
      *
      * @param player The GamePlayer instance to save.
      */
-    private void savePlayerToSQL(GamePlayer player) {
+    private void savePlayerToSQL(@NonNull GamePlayer player) {
         CompletableFuture.runAsync(() -> {
             try (var connection = this.sqlManager.getConnection();
                  var statement = connection.prepareStatement(
@@ -159,7 +161,7 @@ public class GamePlayerManager {
      * @param uuid The UUID of the player.
      * @return The GamePlayer instance from the cache, or null if not found.
      */
-    public GamePlayer getCachedPlayer(String uuid) {
+    public GamePlayer getCachedPlayer(@NonNull String uuid) {
         return this.playerCache.get(uuid);
     }
 

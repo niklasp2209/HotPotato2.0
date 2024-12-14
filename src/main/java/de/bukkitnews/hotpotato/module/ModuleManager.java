@@ -5,7 +5,9 @@ import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.scoreboard.ScoreboardModule;
+import lombok.NonNull;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -18,7 +20,7 @@ public final class ModuleManager {
     private final HotPotato hotPotato;
     private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
 
-    public ModuleManager(HotPotato hotPotato){
+    public ModuleManager(@NonNull HotPotato hotPotato){
         this.hotPotato = hotPotato;
         this.modules = new LinkedHashMap<>();
     }
@@ -68,7 +70,7 @@ public final class ModuleManager {
      * @param moduleClass The class of the module to be retrieved.
      * @return The requested module if it exists, otherwise null.
      */
-    public Optional<CustomModule> getModule(Class<? extends CustomModule> moduleClass) {
+    public Optional<CustomModule> getModule(@Nullable Class<? extends CustomModule> moduleClass) {
         return Optional.ofNullable(modules.get(moduleClass));
     }
 
