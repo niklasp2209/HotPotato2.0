@@ -44,6 +44,7 @@ public class ConfigManager {
 
     /**
      * Gets the FileConfiguration object, which provides access to the configuration data.
+     *
      * @return The FileConfiguration object containing the loaded configuration data
      */
     public FileConfiguration getConfig() {
@@ -71,6 +72,7 @@ public class ConfigManager {
 
     /**
      * Checks if the configuration file exists on the disk.
+     *
      * @return true if the configuration file exists, false otherwise
      */
     public boolean configExists() {

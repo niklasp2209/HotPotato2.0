@@ -1,7 +1,7 @@
 package de.bukkitnews.hotpotato.module.game.commands;
 
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
-import de.bukkitnews.hotpotato.utils.MessageUtil;
+import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

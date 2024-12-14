@@ -28,7 +28,7 @@ public class PlaytimeHandler extends BukkitRunnable {
      */
     @Override
     public void run() {
-        PlayerModule.gamePlayerManager.getPlayerCache().values().forEach(this::increasePlaytimeForPlayer);
+        this.playerModule.getGamePlayerManager().getPlayerCache().values().forEach(this::increasePlaytimeForPlayer);
     }
 
     /**

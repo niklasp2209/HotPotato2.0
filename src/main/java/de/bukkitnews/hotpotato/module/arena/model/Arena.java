@@ -14,7 +14,8 @@ import java.util.Optional;
  * Represents an arena in the game.
  * The arena has properties like name, spawn location, min/max players, and votes.
  */
-@Getter @Setter
+@Getter
+@Setter
 public class Arena {
 
     private final String name;
@@ -23,7 +24,7 @@ public class Arena {
     private Optional<Location> spawnLocation = Optional.empty();
     /**
      * -- GETTER --
-     *  Gets the current vote count for this arena.
+     * Gets the current vote count for this arena.
      *
      * @return the current vote count.
      */
@@ -36,7 +37,7 @@ public class Arena {
      *
      * @param name The name of the arena.
      */
-    public Arena(@NonNull String name){
+    public Arena(@NonNull String name) {
         this.name = name;
         load();
     }

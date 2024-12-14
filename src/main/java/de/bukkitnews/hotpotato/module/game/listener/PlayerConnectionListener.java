@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.ending.EndingState;
 import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
 import de.bukkitnews.hotpotato.module.game.gamestate.lobby.LobbyState;
+import de.bukkitnews.hotpotato.module.game.util.GameItems;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.NonNull;
@@ -82,7 +83,7 @@ public class PlayerConnectionListener implements Listener {
      * @param player The player who joined.
      */
     private void handleLobbyJoin(@NonNull Player player) {
-        player.getInventory().clear();
+        giveLobbyItems(player);
         player.setGameMode(GameMode.SURVIVAL);
         showPlayersToEachOther(player);
 
@@ -101,7 +102,8 @@ public class PlayerConnectionListener implements Listener {
      * @param player The player who joined.
      */
     private void handleIngameJoin(@NonNull Player player) {
-        GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
+        GamePlayer gamePlayer = this.gameModule.getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
         if (gamePlayer != null) {
             gamePlayer.setAlive(false);
         }
@@ -145,6 +147,12 @@ public class PlayerConnectionListener implements Listener {
             current.showPlayer(player);
             player.showPlayer(current);
         }
+    }
+
+    private void giveLobbyItems(@NonNull Player player){
+        player.getInventory().clear();
+
+        player.getInventory().setItem(0, GameItems.ITEM_LOBBY_VOTING);
     }
 
     /**

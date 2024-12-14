@@ -29,7 +29,7 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
-        GamePlayerManager gamePlayerManager = PlayerModule.gamePlayerManager;
+        GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
         String uuid = event.getPlayer().getUniqueId().toString();
 
         gamePlayerManager.loadPlayer(uuid).thenAccept(gamePlayer -> {

@@ -3,9 +3,8 @@ package de.bukkitnews.hotpotato;
 import de.bukkitnews.hotpotato.module.ModuleManager;
 import de.bukkitnews.hotpotato.module.database.ConfigManager;
 import de.bukkitnews.hotpotato.module.database.SQLManager;
-import de.bukkitnews.hotpotato.utils.MessageUtil;
+import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

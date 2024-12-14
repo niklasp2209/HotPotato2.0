@@ -1,6 +1,6 @@
 package de.bukkitnews.hotpotato.module.arena.voting;
 
-import de.bukkitnews.hotpotato.utils.MessageUtil;
+import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

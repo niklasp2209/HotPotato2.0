@@ -9,6 +9,7 @@ import de.bukkitnews.hotpotato.module.game.gamestate.lobby.LobbyState;
 import de.bukkitnews.hotpotato.module.game.listener.AsyncPlayerChatListener;
 import de.bukkitnews.hotpotato.module.game.listener.BlockedListener;
 import de.bukkitnews.hotpotato.module.game.listener.PlayerConnectionListener;
+import de.bukkitnews.hotpotato.module.game.listener.PlayerInteractListener;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.Getter;
@@ -55,9 +56,10 @@ public class GameModule extends CustomModule {
     public void activate() {
         this.currentState = Optional.of(new LobbyState(this));
         setListeners(Arrays.asList(
-                new AsyncPlayerChatListener(),
+                new AsyncPlayerChatListener(this),
                 new BlockedListener(),
-                new PlayerConnectionListener(this)
+                new PlayerConnectionListener(this),
+                new PlayerInteractListener(this)
         ));
         this.currentState.ifPresent(CustomGameStates::start);
     }
@@ -89,8 +91,8 @@ public class GameModule extends CustomModule {
      */
     public void eliminatePlayer() {
         potato.ifPresent(player -> {
-            GamePlayer gamePlayer = PlayerModule.gamePlayerManager
-                    .getCachedPlayer(player.getUniqueId().toString());
+            GamePlayer gamePlayer = getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                            .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
             gamePlayer.setAlive(false);
 
             player.getInventory().clear();
@@ -104,7 +106,8 @@ public class GameModule extends CustomModule {
      * should proceed, end, or transition to a different state.
      */
     private void checkRemainingPlayers() {
-        long aliveCount = PlayerModule.gamePlayerManager.getPlayerCache().values().stream()
+        long aliveCount = getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                .getGamePlayerManager().getPlayerCache().values().stream()
                 .filter(GamePlayer::isAlive)
                 .count();
 

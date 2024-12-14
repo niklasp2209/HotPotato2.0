@@ -4,8 +4,8 @@ import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
-import de.bukkitnews.hotpotato.utils.ItemUtil;
-import de.bukkitnews.hotpotato.utils.MessageUtil;
+import de.bukkitnews.hotpotato.util.ItemUtil;
+import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -121,7 +121,8 @@ public class Voting {
      * @param arena  The arena that the player is voting for.
      */
     public void vote(@NonNull Player player, @NonNull Arena arena) {
-        GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
+        GamePlayer gamePlayer = this.arenaModule.getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
 
         if (gamePlayer.isVoted()) {
             player.sendMessage(MessageUtil.getMessage("voting_already"));

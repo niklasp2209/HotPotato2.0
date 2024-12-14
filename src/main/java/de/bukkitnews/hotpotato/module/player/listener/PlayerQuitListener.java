@@ -36,7 +36,7 @@ public class PlayerQuitListener implements Listener {
      */
     @EventHandler
     public void handleQuit(@NonNull PlayerQuitEvent event) {
-        GamePlayerManager gamePlayerManager = PlayerModule.gamePlayerManager;
+        GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
 
         String uuid = event.getPlayer().getUniqueId().toString();
 

@@ -98,7 +98,7 @@ public class SQLManager {
      * Creates a table in the database if it does not already exist.
      * This method executes an asynchronous query to create the table with the specified schema.
      *
-     * @param tableName The name of the table to create
+     * @param tableName   The name of the table to create
      * @param tableSchema The schema definition of the table
      */
     public void createTable(@NonNull String tableName, @NonNull String tableSchema) {

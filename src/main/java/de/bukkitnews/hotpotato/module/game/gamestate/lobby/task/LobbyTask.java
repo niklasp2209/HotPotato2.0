@@ -4,7 +4,7 @@ import de.bukkitnews.hotpotato.module.arena.events.VotingFinishedEvent;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
 import de.bukkitnews.hotpotato.module.game.gamestate.task.Countdown;
-import de.bukkitnews.hotpotato.utils.MessageUtil;
+import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -55,7 +55,7 @@ public class LobbyTask extends Countdown {
                 case 60, 30, 15, 10, 5, 4, 3, 2:
                     sendRemainingTimeMessage();
                     if (seconds == 5) {
-                        Bukkit.getPluginManager().callEvent(new VotingFinishedEvent());
+                        Bukkit.getPluginManager().callEvent(new VotingFinishedEvent(null));
                     }
                     break;
 

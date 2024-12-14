@@ -70,8 +70,8 @@ public final class ModuleManager {
      * @param moduleClass The class of the module to be retrieved.
      * @return The requested module if it exists, otherwise null.
      */
-    public Optional<CustomModule> getModule(@Nullable Class<? extends CustomModule> moduleClass) {
-        return Optional.ofNullable(modules.get(moduleClass));
+    public <T extends CustomModule> Optional<T> getModule(Class<T> moduleClass){
+        return Optional.ofNullable((T)modules.get(moduleClass));
     }
 
 }

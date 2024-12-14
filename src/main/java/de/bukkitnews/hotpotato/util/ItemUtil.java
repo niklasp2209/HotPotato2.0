@@ -1,4 +1,4 @@
-package de.bukkitnews.hotpotato.utils;
+package de.bukkitnews.hotpotato.util;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
