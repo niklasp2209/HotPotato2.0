@@ -20,6 +20,12 @@ public class VotingListener implements Listener {
         this.voting = voting;
     }
 
+    /**
+     * Handles the inventory click event when a player clicks on an item in the voting inventory.
+     * It cancels the event if it's a voting inventory and processes the player's vote.
+     *
+     * @param event The InventoryClickEvent triggered when a player clicks in an inventory.
+     */
     @EventHandler
     public void handleInventoryClick(@NonNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();

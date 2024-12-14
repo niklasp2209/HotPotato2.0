@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,6 +35,9 @@ public class Voting {
         this.arenaList = new CopyOnWriteArrayList<>();
     }
 
+    /**
+     * Initializes the voting process by asynchronously loading playable arenas and choosing random ones for the vote.
+     */
     public void initVoting() {
         CompletableFuture.runAsync(() -> {
             List<Arena> playableArenas = loadPlayableArenas();
@@ -46,6 +50,11 @@ public class Voting {
         });
     }
 
+    /**
+     * Loads playable arenas from the configuration file, filtering for valid arenas.
+     *
+     * @return List of playable arenas.
+     */
     private List<Arena> loadPlayableArenas() {
         return arenaModule.getArenaConfig()
                 .getConfig()
@@ -56,6 +65,12 @@ public class Voting {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Randomly selects a specified number of arenas from the list of playable arenas.
+     *
+     * @param playableArenas List of playable arenas.
+     * @return List of randomly selected arenas.
+     */
     private List<Arena> chooseRandomMaps(List<Arena> playableArenas) {
         Collections.shuffle(playableArenas);
         return playableArenas.stream()
@@ -63,23 +78,28 @@ public class Voting {
                 .collect(Collectors.toList());
     }
 
-    public Arena getVotingWinner(){
-        Arena arena = this.arenaList.getFirst();
-
-        for(int i = 1; i < this.arenaList.size(); i++){
-            if(this.arenaList.get(i).getVotes() >= arena.getVotes()){
-                arena = this.arenaList.get(i);
-            }
-        }
-        return arena;
+    /**
+     * Determines the arena with the most votes.
+     *
+     * @return The arena with the highest number of votes.
+     */
+    public Arena getVotingWinner() {
+        return arenaList.stream()
+                .max(Comparator.comparingInt(Arena::getVotes))
+                .orElseThrow(() -> new IllegalStateException("No arenas available for voting"));
     }
 
+    /**
+     * Creates the voting inventory for a player to select from the available arenas.
+     *
+     * @param player The player for whom the inventory is created.
+     */
     public void createVotingInventory(@NonNull Player player) {
         Inventory inventory = Bukkit.createInventory(null, 9, MessageUtil.getMessage("Abstimmung"));
 
         NamespacedKey namespacedKey = new NamespacedKey("hotpotato", "arena_id");
 
-        this.arenaList.forEach(arena -> {
+        arenaList.forEach(arena -> {
             ItemStack itemStack = new ItemUtil(Material.PAPER)
                     .setDisplayname(arena.getName())
                     .setLore("Votes: " + arena.getVotes())
@@ -93,11 +113,17 @@ public class Voting {
         player.openInventory(inventory);
     }
 
-
-    public void vote(@NonNull Player player, @NonNull Arena arena){
+    /**
+     * Allows a player to vote for a specific arena.
+     * If the player has already voted, it prevents them from voting again.
+     *
+     * @param player The player who is voting.
+     * @param arena  The arena that the player is voting for.
+     */
+    public void vote(@NonNull Player player, @NonNull Arena arena) {
         GamePlayer gamePlayer = PlayerModule.gamePlayerManager.getCachedPlayer(player.getUniqueId().toString());
 
-        if(gamePlayer.isVoted()){
+        if (gamePlayer.isVoted()) {
             player.sendMessage(MessageUtil.getMessage("voting_already"));
             return;
         }

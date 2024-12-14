@@ -35,15 +35,21 @@ public class ArenaModule extends CustomModule {
         this.arenaConfig = new ConfigManager(hotPotato, "arena.yml");
     }
 
+    /**
+     * Activates the Arena module, setting up the necessary components such as voting.
+     * This method is called when the module is enabled.
+     */
     @Override
     public void activate() {
         this.voting = new Voting(this);
-
         setListeners(List.of(new VotingListener(voting)));
-
         this.voting.initVoting();
     }
 
+    /**
+     * Deactivates the Arena module. This method is called when the module is disabled.
+     * In this case, no additional cleanup is needed.
+     */
     @Override
     public void deactivate() {
 
