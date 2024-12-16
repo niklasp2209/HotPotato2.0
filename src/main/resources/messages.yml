@@ -12,3 +12,7 @@ messages:
   lobby_start: "Dieser Command funktioniert nur in der Lobby"
   lobby_start_already: "Das Spiel startet bereits"
   lobby_started: "Du hast das Spiel gestartet"
+  stats_line1: "Statistiken über %s"
+  stats_line2: "Gespielte Spiele: %d"
+  stats_line3: "Gewonnene Spiele: %d"
+  stats_line4: "Spielzeit: %d Minuten"

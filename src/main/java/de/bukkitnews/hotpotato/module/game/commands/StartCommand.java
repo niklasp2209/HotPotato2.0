@@ -19,10 +19,9 @@ public class StartCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return true;
         }
-        final Player player = (Player) sender;
 
         if (!(this.gameModule.getCurrentState().isPresent() &&
                 this.gameModule.getCurrentState().get() instanceof LobbyState)) {

@@ -16,11 +16,9 @@ public class HotPotatoCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return true;
         }
-
-        Player player = (Player) sender;
 
         // Command structure: /hotpotato setup create <arena_name>
         if (args.length >= 3 && args[0].equalsIgnoreCase("setup") && args[1].equalsIgnoreCase("create")) {

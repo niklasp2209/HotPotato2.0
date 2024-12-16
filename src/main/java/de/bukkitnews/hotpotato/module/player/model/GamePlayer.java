@@ -78,4 +78,31 @@ public class GamePlayer {
                 () -> setData("playtime", amount)
         );
     }
+
+    /**
+     * Retrieves the number of wins.
+     *
+     * @return the number of wins, or 0 if not set
+     */
+    public int getWins() {
+        return (int) getData("wins").orElse(0);
+    }
+
+    /**
+     * Retrieves the number of games played.
+     *
+     * @return the number of games played, or 0 if not set
+     */
+    public int getGamesPlayed() {
+        return (int) getData("gamesPlayed").orElse(0);
+    }
+
+    /**
+     * Retrieves the total playtime.
+     *
+     * @return the total playtime in minutes, or 0 if not set
+     */
+    public long getPlaytime() {
+        return (long) getData("playtime").orElse(0L);
+    }
 }
