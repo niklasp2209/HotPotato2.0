@@ -19,7 +19,6 @@ import java.util.List;
 @Getter
 public class ArenaModule extends CustomModule {
 
-    public static ArenaModule instance;
     private final ConfigManager arenaConfig;
     private final HotPotato hotPotato;
 
@@ -30,7 +29,6 @@ public class ArenaModule extends CustomModule {
     public ArenaModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Arena");
 
-        instance = this;
         this.hotPotato = hotPotato;
         this.arenaConfig = new ConfigManager(hotPotato, "arena.yml");
     }

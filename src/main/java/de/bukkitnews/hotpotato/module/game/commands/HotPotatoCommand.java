@@ -1,6 +1,8 @@
 package de.bukkitnews.hotpotato.module.game.commands;
 
+import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
+import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.NonNull;
 import org.bukkit.command.Command;
@@ -14,6 +16,12 @@ import org.bukkit.entity.Player;
  */
 public class HotPotatoCommand implements CommandExecutor {
 
+    private final GameModule gameModule;
+
+    public HotPotatoCommand(GameModule gameModule) {
+        this.gameModule = gameModule;
+    }
+
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if (!(sender instanceof Player player)) {
@@ -23,7 +31,7 @@ public class HotPotatoCommand implements CommandExecutor {
         // Command structure: /hotpotato setup create <arena_name>
         if (args.length >= 3 && args[0].equalsIgnoreCase("setup") && args[1].equalsIgnoreCase("create")) {
             String arenaName = args[2];
-            Arena arena = new Arena(arenaName);
+            Arena arena = new Arena(arenaName, this.gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get());
 
             if (arena.alreadyExists()) {
                 player.sendMessage(MessageUtil.getMessage("setup_arena_exists"));

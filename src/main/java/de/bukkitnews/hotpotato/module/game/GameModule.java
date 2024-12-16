@@ -65,7 +65,7 @@ public class GameModule extends CustomModule {
                 new PlayerInteractListener(this)
         ));
 
-        getCommandExecutors().put("hotpotato", new HotPotatoCommand());
+        getCommandExecutors().put("hotpotato", new HotPotatoCommand(this));
         getCommandExecutors().put("start", new StartCommand(this));
         getCommandExecutors().put("stats", new StatsCommand(this));
 

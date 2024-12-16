@@ -21,6 +21,7 @@ public class Arena {
     private final String name;
     private int minPlayers;
     private int maxPlayers;
+    private ArenaModule arenaModule;
     private Optional<Location> spawnLocation = Optional.empty();
     /**
      * -- GETTER --
@@ -46,19 +47,19 @@ public class Arena {
      * Loads the arena configuration from the arena module configuration file.
      */
     private void load() {
-        String basePath = ".Arenas." + name;
+        String basePath = ".Arenas." + this.name;
 
-        this.spawnLocation = Optional.ofNullable(ArenaModule.instance
+        this.spawnLocation = Optional.ofNullable(this.arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getLocation(basePath + ".Spawn"));
 
-        this.minPlayers = ArenaModule.instance
+        this.minPlayers = this.arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getInt(basePath + ".MinPlayers", 0);
 
-        this.maxPlayers = ArenaModule.instance
+        this.maxPlayers = this.arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getInt(basePath + ".MaxPlayers", 0);
@@ -70,7 +71,7 @@ public class Arena {
      * @return true if the arena has a spawn location and valid player count limits; false otherwise.
      */
     public boolean isPlayable() {
-        return spawnLocation.isPresent() && minPlayers > 0 && maxPlayers > 0 && !name.isEmpty();
+        return this.spawnLocation.isPresent() && this.minPlayers > 0 && this.maxPlayers > 0 && !this.name.isEmpty();
     }
 
     /**
@@ -79,17 +80,17 @@ public class Arena {
      * @return true if the arena exists; false otherwise.
      */
     public boolean alreadyExists() {
-        return Optional.ofNullable(ArenaModule.instance
+        return Optional.ofNullable(this.arenaModule
                 .getArenaConfig()
                 .getConfig()
-                .getString(".Arenas." + name)).isPresent();
+                .getString(".Arenas." + this.name)).isPresent();
     }
 
     /**
      * Teleports all online players to the arena's spawn location if it exists.
      */
     public void teleportPlayers() {
-        spawnLocation.ifPresent(location ->
+        this.spawnLocation.ifPresent(location ->
                 Bukkit.getOnlinePlayers().forEach(player -> player.teleport(location)));
     }
 
@@ -115,6 +116,6 @@ public class Arena {
      * @throws IllegalStateException If the spawn location is not present.
      */
     public Location getSpawnLocationOrThrow() {
-        return spawnLocation.orElseThrow(() -> new IllegalStateException("Spawn location not set for arena: " + name));
+        return this.spawnLocation.orElseThrow(() -> new IllegalStateException("Spawn location not set for arena: " + this.name));
     }
 }
