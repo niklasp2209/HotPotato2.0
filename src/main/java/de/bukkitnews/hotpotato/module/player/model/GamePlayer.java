@@ -3,10 +3,14 @@ package de.bukkitnews.hotpotato.module.player.model;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Represents a player with a UUID and dynamic player data stored in a key-value map.
@@ -18,12 +22,14 @@ public class GamePlayer {
     private final Map<String, Object> data;
     private boolean alive;
     private boolean voted;
+    private boolean isPotato;
 
     public GamePlayer(String uuid) {
         this.uuid = uuid;
         this.data = new HashMap<>();
         this.alive = true;
         this.voted = false;
+        this.isPotato = false;
     }
 
     /**
@@ -44,6 +50,18 @@ public class GamePlayer {
      */
     public Optional<Object> getData(@NonNull String key) {
         return Optional.ofNullable(this.data.get(key));
+    }
+
+    public void eliminatePlayer(){
+        if(!isPotato){
+            return;
+        }
+
+        setAlive(false);
+        setPotato(false);
+        Player player = Bukkit.getPlayer(UUID.fromString(getUuid()));
+        player.setGameMode(GameMode.SPECTATOR);
+        player.getInventory().clear();
     }
 
     /**

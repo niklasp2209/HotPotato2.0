@@ -17,6 +17,7 @@ import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -31,24 +32,10 @@ import java.util.*;
 public class GameModule extends CustomModule {
 
     private Optional<CustomGameStates> currentState;
-    /**
-     * -- GETTER --
-     *  Retrieves the "potato" player, if set.
-     *
-     * @return An Optional containing the potato player, or empty if not set.
-     */
-    @Getter
-    private Optional<Player> potato;
 
-    /**
-     * Constructor to initialize the GameModule.
-     *
-     * @param hotPotato The main plugin instance.
-     */
     public GameModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Game");
         this.currentState = Optional.empty();
-        this.potato = Optional.empty();
     }
 
     /**
@@ -79,7 +66,6 @@ public class GameModule extends CustomModule {
     public void deactivate() {
         currentState.ifPresent(CustomGameStates::stop);
         this.currentState = Optional.empty();
-        this.potato = Optional.empty();
     }
 
     /**
@@ -98,15 +84,12 @@ public class GameModule extends CustomModule {
      * Sets the player's status to dead and switches their game mode to spectator.
      */
     public void eliminatePlayer() {
-        potato.ifPresent(player -> {
-            GamePlayer gamePlayer = getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
-                            .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
-            gamePlayer.setAlive(false);
-
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SPECTATOR);
-            this.potato = Optional.empty();
-        });
+        for(GamePlayer gamePlayer : getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                .getGamePlayerManager().getPlayerCache().values()){
+            if(gamePlayer.isPotato()){
+                gamePlayer.eliminatePlayer();
+            }
+        }
     }
 
     /**
@@ -122,15 +105,6 @@ public class GameModule extends CustomModule {
         if (aliveCount <= 1) {
             this.setCurrentState(new EndingState(this));
         }
-    }
-
-    /**
-     * Sets the "potato" player.
-     *
-     * @param player The player to hold the potato.
-     */
-    public void setPotato(@NonNull Player player) {
-        this.potato = Optional.of(player);
     }
 
 }

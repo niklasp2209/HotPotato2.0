@@ -12,15 +12,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class AchievementModule extends CustomModule {
 
-    public static ArenaModule instance;
     private final HotPotato hotPotato;
 
-    private final List<Achievement> achievementCache = new ArrayList<>();
+    private final Map<Integer, Achievement> achievementCache = new ConcurrentHashMap<>();
 
     public AchievementModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Achievement");
@@ -32,19 +33,23 @@ public class AchievementModule extends CustomModule {
     public void activate() {
         this.hotPotato.getSqlManager().createTable("hotpotato_achieve_objects",
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(36), " +
-                "description VARCHAR(128), " +
-                "goal INT DEFAULT 0, ");
+                        "name VARCHAR(36), " +
+                        "description VARCHAR(128), " +
+                        "goal INT DEFAULT 0");
 
         this.hotPotato.getSqlManager().createTable("hotpotato_achieve_player",
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "uuid VARCHAR(36), " +
-                        "achievement_id INT(3), " +
-                        "progress INT DEFAULT 0, ");
+                        "achievement_id INT, " +
+                        "progress INT DEFAULT 0, " +
+                        "FOREIGN KEY (achievement_id) REFERENCES hotpotato_achieve_objects(id) " +
+                        "ON DELETE CASCADE ON UPDATE CASCADE");
 
+        // Achievements laden
         loadAchievements().thenRun(() ->
                 this.hotPotato.getLogger().info("Achievements successfully cached."));
     }
+
 
     @Override
     public void deactivate() {
@@ -52,13 +57,12 @@ public class AchievementModule extends CustomModule {
     }
 
 
-
-    private CompletableFuture<Void> loadAchievements(){
+    private CompletableFuture<Void> loadAchievements() {
         return CompletableFuture.runAsync(() -> {
             try (Connection connection = hotPotato.getSqlManager().getConnection()) {
                 ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM hotpotato_achieve_objects");
 
-                List<Achievement> tempCache = new ArrayList<>();
+                achievementCache.clear();
 
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
@@ -68,13 +72,9 @@ public class AchievementModule extends CustomModule {
 
                     Achievement achievement = new Achievement(id, name, description, goal);
 
-                    tempCache.add(achievement);
+                    achievementCache.put(id, achievement);
                 }
 
-                synchronized (achievementCache) {
-                    achievementCache.clear();
-                    achievementCache.addAll(tempCache);
-                }
             } catch (SQLException e) {
                 hotPotato.getLogger().severe("Fehler beim Laden der Achievements: " + e.getMessage());
             }
@@ -82,11 +82,6 @@ public class AchievementModule extends CustomModule {
     }
 
     public Achievement getAchievementById(int id) {
-        synchronized (achievementCache) {
-            return achievementCache.stream()
-                    .filter(achievement -> achievement.getId() == id)
-                    .findFirst()
-                    .orElse(null);
-        }
-}
+        return achievementCache.get(id);
+    }
 }

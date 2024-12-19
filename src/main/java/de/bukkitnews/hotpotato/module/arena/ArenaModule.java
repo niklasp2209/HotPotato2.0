@@ -24,8 +24,6 @@ public class ArenaModule extends CustomModule {
 
     private Voting voting;
 
-    private final List<Arena> arenaList = new ArrayList<>();
-
     public ArenaModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Arena");
 

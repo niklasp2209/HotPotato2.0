@@ -60,7 +60,7 @@ public class Voting {
                 .getConfig()
                 .getConfigurationSection(".Arenas").getKeys(false)
                 .stream()
-                .map(Arena::new)
+                .map(name -> new Arena(name, arenaModule))
                 .filter(Arena::isPlayable)
                 .collect(Collectors.toList());
     }

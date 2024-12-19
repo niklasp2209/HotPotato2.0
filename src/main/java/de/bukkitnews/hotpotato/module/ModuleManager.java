@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
+import de.bukkitnews.hotpotato.exception.ModuleNotEnabledException;
 import de.bukkitnews.hotpotato.module.achievement.AchievementModule;
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;

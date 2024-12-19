@@ -22,6 +22,13 @@ public class Arena {
     private int minPlayers;
     private int maxPlayers;
     private ArenaModule arenaModule;
+    /**
+     * -- GETTER --
+     *  Retrieves the spawn location of the arena, if available.
+     *
+     * @return An Optional containing the spawn location, or an empty Optional if it is not set.
+     */
+    @Getter
     private Optional<Location> spawnLocation = Optional.empty();
     /**
      * -- GETTER --
@@ -38,10 +45,12 @@ public class Arena {
      *
      * @param name The name of the arena.
      */
-    public Arena(@NonNull String name) {
+    public Arena(@NonNull String name, @NonNull ArenaModule arenaModule) {
         this.name = name;
+        this.arenaModule = arenaModule;
         load();
     }
+
 
     /**
      * Loads the arena configuration from the arena module configuration file.
@@ -108,14 +117,4 @@ public class Arena {
         this.votes--;
     }
 
-    /**
-     * Retrieves the spawn location of the arena.
-     * If the spawn location is not set, it throws an exception.
-     *
-     * @return The spawn location.
-     * @throws IllegalStateException If the spawn location is not present.
-     */
-    public Location getSpawnLocationOrThrow() {
-        return this.spawnLocation.orElseThrow(() -> new IllegalStateException("Spawn location not set for arena: " + this.name));
-    }
 }
