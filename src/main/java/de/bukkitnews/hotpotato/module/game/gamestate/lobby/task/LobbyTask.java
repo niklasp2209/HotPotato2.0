@@ -37,13 +37,13 @@ public class LobbyTask extends Countdown {
      */
     @Override
     protected void onTick() {
-        if (isIdling) {
+        if (this.isIdling) {
             stopIdle();
         }
 
         super.onTick();
 
-        if (seconds == 5) {
+        if (this.seconds == 5) {
             Bukkit.getPluginManager().callEvent(new VotingFinishedEvent(
                     this.gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get()
                             .getVoting().getVotingWinner()));
@@ -56,7 +56,7 @@ public class LobbyTask extends Countdown {
      */
     @Override
     protected void onFinish() {
-        gameModule.setCurrentState(new IngameState(gameModule));
+        this.gameModule.setCurrentState(new IngameState(this.gameModule));
     }
 
     /**
@@ -67,8 +67,8 @@ public class LobbyTask extends Countdown {
      */
     @Override
     protected String getRemainingTimeMessage() {
-        String messageKey = (seconds == 1) ? "lobbytask_remaining1" : "lobbytask_remaining";
-        return MessageUtil.getMessage(messageKey, String.valueOf(seconds));
+        String messageKey = (this.seconds == 1) ? "lobbytask_remaining1" : "lobbytask_remaining";
+        return MessageUtil.getMessage(messageKey, String.valueOf(this.seconds));
     }
 
     /**
@@ -85,7 +85,7 @@ public class LobbyTask extends Countdown {
 
     @Override
     protected Plugin getPlugin() {
-        return gameModule.getHotPotato();
+        return this.gameModule.getHotPotato();
     }
 
     /**

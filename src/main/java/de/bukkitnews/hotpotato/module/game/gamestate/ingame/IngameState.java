@@ -2,7 +2,11 @@ package de.bukkitnews.hotpotato.module.game.gamestate.ingame;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import de.bukkitnews.hotpotato.module.player.PlayerModule;
+import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.NonNull;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 /**
  * Represents the Ingame state in the game. This is the state where the actual game happens
@@ -35,5 +39,22 @@ public class IngameState extends CustomGameStates {
     @Override
     public void deactivate() {
         logToConsole("Ingame state deactivated.");
+    }
+
+    @Override
+    public void onJoin(@NonNull Player player) {
+        GamePlayer gamePlayer = this.getGameModule().getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
+                .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
+        if (gamePlayer != null) {
+            gamePlayer.setAlive(false);
+        }
+
+        player.getInventory().clear();
+        player.setGameMode(GameMode.SPECTATOR);
+    }
+
+    @Override
+    public void onQuit(@NonNull Player player) {
+
     }
 }

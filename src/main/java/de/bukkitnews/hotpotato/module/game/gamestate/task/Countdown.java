@@ -44,7 +44,7 @@ public abstract class Countdown {
      */
     public void start() {
         this.isRunning = true;
-        this.seconds = initialDuration;
+        this.seconds = this.initialDuration;
         this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
                 getPlugin(),
                 this::onTick,
@@ -60,7 +60,7 @@ public abstract class Countdown {
     public void stop() {
         this.isRunning = false;
         Bukkit.getScheduler().cancelTask(this.taskId);
-        this.seconds = initialDuration;
+        this.seconds = this.initialDuration;
     }
 
     /**
@@ -69,13 +69,13 @@ public abstract class Countdown {
      * or when specific time intervals are reached.
      */
     protected void onTick() {
-        if (seconds <= 0) {
+        if (this.seconds <= 0) {
             onFinish();
         } else {
-            if (shouldSendRemainingTime(seconds)) {
+            if (shouldSendRemainingTime(this.seconds)) {
                 sendRemainingTimeMessage();
             }
-            seconds--;
+            this.seconds--;
         }
     }
 

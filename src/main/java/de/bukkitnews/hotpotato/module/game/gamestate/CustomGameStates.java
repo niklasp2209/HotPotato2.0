@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.module.game.GameModule;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -33,6 +34,22 @@ public abstract class CustomGameStates {
      * This method must be implemented by subclasses to define specific deactivation logic.
      */
     public abstract void deactivate();
+
+    /**
+     * Handles the logic when a player joins this game state.
+     * This method must be implemented by subclasses to define what should happen when a player joins.
+     *
+     * @param player The player who joined the game state.
+     */
+    public abstract void onJoin(@NonNull Player player);
+
+    /**
+     * Handles the logic when a player quits this game state.
+     * This method must be implemented by subclasses to define what should happen when a player quits.
+     *
+     * @param player The player who left the game state.
+     */
+    public abstract void onQuit(@NonNull Player player);
 
     /**
      * Starts the game state by logging the loading process and registering event listeners.
