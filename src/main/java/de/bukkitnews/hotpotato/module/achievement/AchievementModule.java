@@ -45,7 +45,6 @@ public class AchievementModule extends CustomModule {
                         "FOREIGN KEY (achievement_id) REFERENCES hotpotato_achieve_objects(id) " +
                         "ON DELETE CASCADE ON UPDATE CASCADE");
 
-        // Achievements laden
         loadAchievements().thenRun(() ->
                 this.hotPotato.getLogger().info("Achievements successfully cached."));
     }

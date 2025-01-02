@@ -28,20 +28,38 @@ public class HotPotatoCommand implements CommandExecutor {
             return true;
         }
 
-        // Command structure: /hotpotato setup create <arena_name>
-        if (args.length >= 3 && args[0].equalsIgnoreCase("setup") && args[1].equalsIgnoreCase("create")) {
-            String arenaName = args[2];
-            Arena arena = new Arena(arenaName, this.gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get());
-
-            if (arena.alreadyExists()) {
-                player.sendMessage(MessageUtil.getMessage("setup_arena_exists"));
-                return true;
-            }
-
-            player.sendMessage(MessageUtil.getMessage("setup_arena_spawn"));
-            // Add additional logic to handle the arena creation here (e.g., setting spawn points, saving arena, etc.)
+        if (args.length == 0) {
+            return false;
         }
 
+        switch (args[0].toLowerCase()) {
+            case "setlobby" -> {
+                if (args.length == 1) {
+                    return true;
+                }
+            }
+            case "setup" -> {
+                if (args.length >= 3) switch (args[1].toLowerCase()) {
+                    case "create" -> handleCreateArena(args[2], player);
+                    case "spawnlocation" -> handleSpawnLocation(player);
+                }
+            }
+        }
         return false;
+    }
+
+    private void handleCreateArena(String arenaName, Player player) {
+        Arena arena = new Arena(arenaName, gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get());
+
+        if (arena.alreadyExists()) {
+            player.sendMessage(MessageUtil.getMessage("setup_arena_exists"));
+        } else {
+            player.sendMessage(MessageUtil.getMessage("setup_arena_spawn"));
+        }
+    }
+
+    private void handleSpawnLocation(Player player) {
+
+        player.sendMessage(MessageUtil.getMessage("setup_spawn_location"));
     }
 }

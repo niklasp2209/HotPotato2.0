@@ -34,9 +34,9 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void handleJoin(@NonNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        event.setJoinMessage(null); // Disable default join message
+        event.setJoinMessage(null);
 
-        this.gameModule.getCurrentState().ifPresent(state -> state.onJoin(player));  // Delegate to the state's onJoin method
+        this.gameModule.getCurrentState().ifPresent(state -> state.onJoin(player));
     }
 
     /**
@@ -47,8 +47,8 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler
     public void handleQuit(@NonNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        event.setQuitMessage(null); // Disable default quit message
+        event.setQuitMessage(null);
 
-        this.gameModule.getCurrentState().ifPresent(state -> state.onQuit(player));  // Delegate to the state's onQuit method
+        this.gameModule.getCurrentState().ifPresent(state -> state.onQuit(player));
     }
 }
