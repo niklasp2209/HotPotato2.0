@@ -11,6 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This is the main class for the "HotPotato" plugin,
  * developed as part of the BukkitNews project.
  *
+ * The system works with:
+ * - FileConfiguration: For handling plugin configurations like messages and MySQL settings.
+ * - SQL: For interacting with relational databases for persistent data storage.
+ * - Redis: For distributed caching and real-time communication across servers.
+ *
  * Created on: 06.12.2024
  */
 @Getter

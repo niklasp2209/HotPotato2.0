@@ -11,6 +11,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+/**
+ * Listener for player interactions in the game.
+ * This class listens to player interaction events and handles specific actions like using special items (e.g., voting, leaving the lobby).
+ */
 public class PlayerInteractListener implements Listener {
 
     private final GameModule gameModule;

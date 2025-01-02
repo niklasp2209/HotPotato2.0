@@ -9,6 +9,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Command class to display player statistics.
+ * This class implements the `/stats` command to show the player their game statistics such as wins, games played, and playtime.
+ */
 public class StatsCommand implements CommandExecutor {
 
     private final GameModule gameModule;

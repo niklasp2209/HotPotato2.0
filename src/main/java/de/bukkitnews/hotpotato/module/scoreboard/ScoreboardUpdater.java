@@ -5,6 +5,10 @@ import de.bukkitnews.hotpotato.module.scoreboard.model.ScoreboardController;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * The ScoreboardUpdater class is responsible for periodically updating the player's scoreboard.
+ * It uses a BukkitRunnable to schedule repeated updates of the scoreboard at fixed intervals.
+ */
 @RequiredArgsConstructor
 public class ScoreboardUpdater {
 

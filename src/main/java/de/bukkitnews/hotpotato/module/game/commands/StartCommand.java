@@ -8,6 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Command class to start the game countdown from the lobby.
+ * This command is used to set the starting countdown time when the game is in the lobby state.
+ */
 public class StartCommand implements CommandExecutor {
 
     private final GameModule gameModule;

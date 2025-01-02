@@ -48,6 +48,12 @@ public class HotPotatoCommand implements CommandExecutor {
         return false;
     }
 
+    /**
+     * Handles the "create" subcommand under the "setup" command.
+     * This method is used to create a new arena with the specified name.
+     * @param arenaName The name of the arena to create.
+     * @param player The player who issued the command.
+     */
     private void handleCreateArena(String arenaName, Player player) {
         Arena arena = new Arena(arenaName, gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get());
 
@@ -58,6 +64,11 @@ public class HotPotatoCommand implements CommandExecutor {
         }
     }
 
+    /**
+     * Handles the "spawnlocation" subcommand under the "setup" command.
+     * This method is used to set the spawn location for the arena.
+     * @param player The player who issued the command.
+     */
     private void handleSpawnLocation(Player player) {
 
         player.sendMessage(MessageUtil.getMessage("setup_spawn_location"));

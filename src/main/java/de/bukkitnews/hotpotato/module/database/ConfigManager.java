@@ -32,14 +32,14 @@ public class ConfigManager {
      * default configuration resource from the plugin's JAR file.
      */
     private void setup() {
-        configFile = new File(hotPotato.getDataFolder(), fileName);
+        this.configFile = new File(this.hotPotato.getDataFolder(), this.fileName);
 
-        if (!configFile.exists()) {
-            hotPotato.getDataFolder().mkdirs();
-            hotPotato.saveResource(fileName, false);
+        if (!this.configFile.exists()) {
+            this.hotPotato.getDataFolder().mkdirs();
+            this.hotPotato.saveResource(this.fileName, false);
         }
 
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+        this.fileConfiguration = YamlConfiguration.loadConfiguration(this.configFile);
     }
 
     /**
@@ -48,7 +48,7 @@ public class ConfigManager {
      * @return The FileConfiguration object containing the loaded configuration data
      */
     public FileConfiguration getConfig() {
-        return fileConfiguration;
+        return this.fileConfiguration;
     }
 
     /**
@@ -56,9 +56,9 @@ public class ConfigManager {
      */
     public void save() {
         try {
-            fileConfiguration.save(configFile);
+            this.fileConfiguration.save(this.configFile);
         } catch (IOException e) {
-            hotPotato.getLogger().severe("Could not save config file: " + fileName);
+            this.hotPotato.getLogger().severe("Could not save config file: " + this.fileName);
             e.printStackTrace();
         }
     }
@@ -67,7 +67,7 @@ public class ConfigManager {
      * Reloads the configuration from the file, refreshing the configuration data.
      */
     public void reload() {
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+        this.fileConfiguration = YamlConfiguration.loadConfiguration(this.configFile);
     }
 
     /**
@@ -76,6 +76,6 @@ public class ConfigManager {
      * @return true if the configuration file exists, false otherwise
      */
     public boolean configExists() {
-        return configFile.exists();
+        return this.configFile.exists();
     }
 }
