@@ -77,7 +77,9 @@ public class GameUtil {
      * @param lobbyLocation The location to teleport the players to.
      */
     public static void teleportPlayersToLobby(List<Player> players, Location lobbyLocation) {
-        if (lobbyLocation == null) return;
+        if (lobbyLocation == null) {
+            return;
+        }
         for (Player player : players) {
             player.teleport(lobbyLocation);
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 1F);
@@ -92,7 +94,9 @@ public class GameUtil {
      * @param potato The player holding the Hot Potato.
      */
     public static void clearInventoriesExceptPotato(List<Player> players, Player potato) {
-        if (potato == null) return;
+        if (potato == null) {
+            return;
+        }
         for (Player player : players) {
             if (!player.equals(potato)) {
                 player.getInventory().clear();
@@ -106,7 +110,9 @@ public class GameUtil {
      * @param player The player at whose location the effects will occur.
      */
     public static void triggerFireworkAndExplosionEffects(Player player) {
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         player.getWorld().spawnParticle(Particle.EXPLOSION, player.getLocation(), 0, 0, 0, 0);
         player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET);
         player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1F, 1F);
@@ -121,7 +127,9 @@ public class GameUtil {
      * @param time The remaining time in seconds.
      */
     public static void updatePlayerLevels(List<Player> players, int time) {
-        if (players == null || players.isEmpty()) return;
+        if (players == null || players.isEmpty()) {
+            return;
+        }
         for (Player player : players) {
             if (time <= 20) {
                 player.setLevel(time);
@@ -137,7 +145,9 @@ public class GameUtil {
      * @param message The message to broadcast to all players.
      */
     public static void broadcastMessage(String message) {
-        if (message == null || message.isEmpty()) return;
+        if (message == null || message.isEmpty()) {
+            return;
+        }
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(message);
         }
