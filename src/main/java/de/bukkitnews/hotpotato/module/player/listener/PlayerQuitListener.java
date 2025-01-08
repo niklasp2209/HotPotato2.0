@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,13 +18,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * with the {@link GamePlayerManager} to manage and persist player data
  * to Redis and SQL.
  */
+@RequiredArgsConstructor
 public class PlayerQuitListener implements Listener {
 
-    private final PlayerModule playerModule;
-
-    public PlayerQuitListener(@NonNull PlayerModule playerModule) {
-        this.playerModule = playerModule;
-    }
+    @NonNull private final PlayerModule playerModule;
 
     /**
      * Handles the {@link PlayerQuitEvent} when a player leaves the server.

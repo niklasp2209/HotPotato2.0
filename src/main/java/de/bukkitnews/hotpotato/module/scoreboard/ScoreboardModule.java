@@ -16,8 +16,8 @@ import java.util.Optional;
  */
 public class ScoreboardModule extends CustomModule {
 
-    private Optional<ScoreboardController> lobbyBoard = Optional.empty();
-    private Optional<ScoreboardController> ingameBoard = Optional.empty();
+    @NonNull private Optional<ScoreboardController> lobbyBoard = Optional.empty();
+    @NonNull private Optional<ScoreboardController> ingameBoard = Optional.empty();
 
     public ScoreboardModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Game");
@@ -50,11 +50,11 @@ public class ScoreboardModule extends CustomModule {
         ingameBoard.ifPresent(ScoreboardController::clearScoreboards);
     }
 
-    public void applyLobbyScoreboard(GamePlayer gamePlayer){
+    public void applyLobbyScoreboard(@NonNull GamePlayer gamePlayer){
         lobbyBoard.ifPresent(controller -> controller.applyScoreboard(gamePlayer));
     }
 
-    public void applyIngameScoreboard(GamePlayer gamePlayer){
+    public void applyIngameScoreboard(@NonNull GamePlayer gamePlayer){
         ingameBoard.ifPresent(controller -> controller.applyScoreboard(gamePlayer));
     }
 }

@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.util.GameItems;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,13 +16,10 @@ import org.bukkit.inventory.EquipmentSlot;
  * Listener for player interactions in the game.
  * This class listens to player interaction events and handles specific actions like using special items (e.g., voting, leaving the lobby).
  */
+@RequiredArgsConstructor
 public class PlayerInteractListener implements Listener {
 
-    private final GameModule gameModule;
-
-    public PlayerInteractListener(GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
+    @NonNull private final GameModule gameModule;
 
     @EventHandler
     public void handleInteract(@NonNull PlayerInteractEvent event) {

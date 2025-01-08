@@ -3,24 +3,17 @@ package de.bukkitnews.hotpotato.module.player.handler;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Handler for managing the playtime of players.
  * This class runs periodically and increases the playtime for each player in the game.
  */
+@RequiredArgsConstructor
 public class PlaytimeHandler extends BukkitRunnable {
 
-    private final PlayerModule playerModule;
-
-    /**
-     * Constructs a PlaytimeHandler for the given PlayerModule.
-     *
-     * @param playerModule The PlayerModule to interact with.
-     */
-    public PlaytimeHandler(@NonNull PlayerModule playerModule) {
-        this.playerModule = playerModule;
-    }
+    @NonNull private final PlayerModule playerModule;
 
     /**
      * Periodically increases the playtime for each player in the game.

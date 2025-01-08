@@ -10,9 +10,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 
 public class ScoreboardBuilder {
-    private final Scoreboard scoreboard;
-    private final Objective sideBarObjective;
-    private final Map<Integer, String> scoreboardValues;
+    @NonNull private final Scoreboard scoreboard;
+    @NonNull private final Objective sideBarObjective;
+    @NonNull private final Map<Integer, String> scoreboardValues;
 
     /**
      * Create an sidebar objective by using an existing scoreboard

@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.game.gamestate.task.Countdown;
 import de.bukkitnews.hotpotato.module.game.util.GameUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -20,9 +21,8 @@ import java.util.List;
 public class PotatoCountdown extends Countdown {
 
     private int seconds = 20;
-
     private Player potato;
-    private final HotPotato hotPotato;
+    @NonNull private final HotPotato hotPotato;
 
     /**
      * Constructor for PotatoCountdown.
@@ -30,7 +30,7 @@ public class PotatoCountdown extends Countdown {
      *
      * @param hotPotato The HotPotato instance to interact with.
      */
-    public PotatoCountdown(HotPotato hotPotato) {
+    public PotatoCountdown(@NonNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;
     }
 

@@ -19,10 +19,10 @@ import java.util.logging.Logger;
  */
 public class GamePlayerManager {
 
-    private final SQLManager sqlManager;
-    private final JedisPool jedisPool;
-    private final Logger logger;
-    @Getter private final Map<String, GamePlayer> playerCache;
+    @NonNull private final SQLManager sqlManager;
+    @NonNull private final JedisPool jedisPool;
+    @NonNull private final Logger logger;
+    @NonNull @Getter private final Map<String, GamePlayer> playerCache;
 
     public GamePlayerManager(@NonNull SQLManager sqlManager, @NonNull JedisPool jedisPool, @NonNull Logger logger) {
         this.sqlManager = sqlManager;

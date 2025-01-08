@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 public class Voting {
 
     private static final int VOTING_MAP_AMOUNT = 2;
-    private final ArenaModule arenaModule;
-    private final List<Arena> arenaList;
+    @NonNull private final ArenaModule arenaModule;
+    @NonNull private final List<Arena> arenaList;
 
-    public Voting(ArenaModule arenaModule) {
+    public Voting(@NonNull ArenaModule arenaModule) {
         this.arenaModule = arenaModule;
         this.arenaList = new CopyOnWriteArrayList<>();
     }
@@ -71,7 +71,7 @@ public class Voting {
      * @param playableArenas List of playable arenas.
      * @return List of randomly selected arenas.
      */
-    private List<Arena> chooseRandomMaps(List<Arena> playableArenas) {
+    private List<Arena> chooseRandomMaps(@NonNull List<Arena> playableArenas) {
         Collections.shuffle(playableArenas);
         return playableArenas.stream()
                 .limit(VOTING_MAP_AMOUNT)

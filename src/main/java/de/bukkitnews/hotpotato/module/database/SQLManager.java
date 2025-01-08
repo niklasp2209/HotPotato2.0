@@ -16,8 +16,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class SQLManager {
 
-    private final HotPotato hotPotato;
-    private final HikariDataSource hikariDataSource;
+    @NonNull private final HotPotato hotPotato;
+    @NonNull private final HikariDataSource hikariDataSource;
 
     /**
      * Constructor for initializing the SQLManager and establishing a connection to the MySQL database.

@@ -4,6 +4,7 @@ import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,13 +14,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  * This class listens for player chat events and handles the chat formatting
  * and player restrictions (such as spectators being unable to chat).
  */
+@RequiredArgsConstructor
 public class AsyncPlayerChatListener implements Listener {
 
-    private final GameModule gameModule;
-
-    public AsyncPlayerChatListener(GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
+    @NonNull private final GameModule gameModule;
 
     /**
      * Handles the asynchronous player chat event.

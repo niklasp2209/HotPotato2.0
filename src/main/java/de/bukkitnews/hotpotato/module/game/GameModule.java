@@ -31,7 +31,7 @@ import java.util.*;
 @Getter
 public class GameModule extends CustomModule {
 
-    private Optional<CustomGameStates> currentState;
+    @NonNull private Optional<CustomGameStates> currentState;
 
     public GameModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Game");

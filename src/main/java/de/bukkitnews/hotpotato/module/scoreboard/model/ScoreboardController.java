@@ -22,9 +22,9 @@ import java.util.UUID;
  */
 public class ScoreboardController {
 
-    private final HotPotato hotPotato;
-    private final List<ScoreboardElement> elements;
-    private Optional<Scoreboard> scoreboard = Optional.empty();
+    @NonNull private final HotPotato hotPotato;
+    @NonNull private final List<ScoreboardElement> elements;
+    @NonNull private Optional<Scoreboard> scoreboard = Optional.empty();
 
     public ScoreboardController(@NonNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;
@@ -36,7 +36,7 @@ public class ScoreboardController {
      *
      * @param scoreboardElement The element to add to the scoreboard
      */
-    public void registerElement(ScoreboardElement scoreboardElement) {
+    public void registerElement(@NonNull ScoreboardElement scoreboardElement) {
         elements.add(scoreboardElement);
     }
 
@@ -47,7 +47,7 @@ public class ScoreboardController {
      *
      * @param gamePlayer The player to apply the scoreboard to
      */
-    public void applyScoreboard(GamePlayer gamePlayer) {
+    public void applyScoreboard(@NonNull GamePlayer gamePlayer) {
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = newScoreboard.registerNewObjective("hotpotato", Criteria.DUMMY, "§lHot Potato");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -67,7 +67,7 @@ public class ScoreboardController {
      *
      * @param gamePlayer The player whose scoreboard elements should be updated
      */
-    public void updateScoreboard(GamePlayer gamePlayer) {
+    public void updateScoreboard(@NonNull GamePlayer gamePlayer) {
         elements.forEach(element -> element.update(gamePlayer));
     }
 

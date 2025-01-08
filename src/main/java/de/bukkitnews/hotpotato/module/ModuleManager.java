@@ -19,8 +19,8 @@ import java.util.Optional;
  */
 public final class ModuleManager {
 
-    private final HotPotato hotPotato;
-    private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
+    @NonNull private final HotPotato hotPotato;
+    @NonNull private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
 
     public ModuleManager(@NonNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;

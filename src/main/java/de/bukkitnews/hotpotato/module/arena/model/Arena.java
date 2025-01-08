@@ -18,10 +18,10 @@ import java.util.Optional;
 @Setter
 public class Arena {
 
-    private final String name;
+    @NonNull private final String name;
+    @NonNull private ArenaModule arenaModule;
     private int minPlayers;
     private int maxPlayers;
-    private ArenaModule arenaModule;
     /**
      * -- GETTER --
      *  Retrieves the spawn location of the arena, if available.

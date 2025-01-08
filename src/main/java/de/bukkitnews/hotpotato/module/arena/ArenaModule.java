@@ -19,8 +19,8 @@ import java.util.List;
 @Getter
 public class ArenaModule extends CustomModule {
 
-    private final ConfigManager arenaConfig;
-    private final HotPotato hotPotato;
+    @NonNull private final ConfigManager arenaConfig;
+    @NonNull private final HotPotato hotPotato;
 
     private Voting voting;
 

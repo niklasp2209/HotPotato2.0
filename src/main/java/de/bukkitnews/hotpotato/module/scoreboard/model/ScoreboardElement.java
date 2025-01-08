@@ -15,14 +15,9 @@ import org.bukkit.scoreboard.Objective;
 @Data
 public abstract class ScoreboardElement {
 
-    /** A unique identifier for this scoreboard element (e.g., "time", "remaining_players") */
-    private final String identifier;
-
-    /** The label or name of the element that will be displayed on the scoreboard (e.g., "Time", "Remaining Players") */
-    private final String label;
-
-    /** The default value to display when the element is first applied (e.g., "0" for time or players) */
-    private final String defaultValue;
+    @NonNull private final String identifier;
+    @NonNull  private final String label;
+    @NonNull private final String defaultValue;
 
     /**
      * Applies this scoreboard element to the provided Objective at a specific score index.

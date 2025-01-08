@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.scoreboard;
 
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.scoreboard.model.ScoreboardController;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,8 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class ScoreboardUpdater {
 
-    private final ScoreboardModule scoreboardModule;
-    private final ScoreboardController scoreboardController;
+    @NonNull private final ScoreboardModule scoreboardModule;
+    @NonNull private final ScoreboardController scoreboardController;
 
     public void startUpdating(GamePlayer gamePlayer) {
         new BukkitRunnable() {

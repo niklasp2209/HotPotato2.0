@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class VotingListener implements Listener {
 
-    private final Voting voting;
+    @NonNull private final Voting voting;
 
     public VotingListener(@NonNull Voting voting) {
         this.voting = voting;

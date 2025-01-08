@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,8 +16,8 @@ import java.io.IOException;
  * exists and is accessible.
  */
 public class ConfigManager {
-    private final HotPotato hotPotato;
-    private final String fileName;
+    @NonNull private final HotPotato hotPotato;
+    @NonNull private final String fileName;
     private File configFile;
     private FileConfiguration fileConfiguration;
 

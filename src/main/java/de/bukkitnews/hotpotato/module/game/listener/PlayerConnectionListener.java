@@ -2,6 +2,7 @@ package de.bukkitnews.hotpotato.module.game.listener;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,18 +14,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * PlayerConnectionListener handles player connection events (join/quit)
  * and manages state-specific logic for players in the game.
  */
+@RequiredArgsConstructor
 public class PlayerConnectionListener implements Listener {
 
-    private final GameModule gameModule;
-
-    /**
-     * Constructor to initialize the PlayerConnectionListener.
-     *
-     * @param gameModule The game module managing the game states and logic.
-     */
-    public PlayerConnectionListener(@NonNull GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
+    @NonNull private final GameModule gameModule;
 
     /**
      * Handles player join events and delegates to the state-specific logic.

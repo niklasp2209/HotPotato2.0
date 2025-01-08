@@ -20,7 +20,7 @@ import org.bukkit.plugin.Plugin;
 @Getter @Setter
 public class LobbyTask extends Countdown {
 
-    private final GameModule gameModule;
+    @NonNull private final GameModule gameModule;
     private int idleId;
     private boolean isIdling;
 

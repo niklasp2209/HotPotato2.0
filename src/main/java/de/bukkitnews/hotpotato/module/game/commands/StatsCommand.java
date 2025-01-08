@@ -4,6 +4,8 @@ import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.util.MessageUtil;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,16 +15,13 @@ import org.bukkit.entity.Player;
  * Command class to display player statistics.
  * This class implements the `/stats` command to show the player their game statistics such as wins, games played, and playtime.
  */
+@RequiredArgsConstructor
 public class StatsCommand implements CommandExecutor {
 
-    private final GameModule gameModule;
-
-    public StatsCommand(GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
+    @NonNull private final GameModule gameModule;
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if (!(sender instanceof Player player)) {
             return true;
         }

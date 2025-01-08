@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 @Getter
 public class LobbyState extends CustomGameStates {
 
-    private final LobbyTask lobbyTask; // The countdown task for the lobby phase
+    @NonNull private final LobbyTask lobbyTask;
 
     /**
      * Constructor to initialize the lobby state with the associated game module.

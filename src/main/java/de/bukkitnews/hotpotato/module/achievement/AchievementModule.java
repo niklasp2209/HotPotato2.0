@@ -23,13 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class AchievementModule extends CustomModule {
 
-    private final HotPotato hotPotato;
+    @NonNull private final HotPotato hotPotato;
 
-    private final Map<Integer, Achievement> achievementCache = new ConcurrentHashMap<>();
+    @NonNull private final Map<Integer, Achievement> achievementCache;
 
     public AchievementModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Achievement");
 
+        this.achievementCache = new ConcurrentHashMap<>();
         this.hotPotato = hotPotato;
     }
 

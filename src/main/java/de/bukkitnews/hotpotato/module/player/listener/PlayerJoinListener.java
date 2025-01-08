@@ -2,6 +2,8 @@ package de.bukkitnews.hotpotato.module.player.listener;
 
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -12,13 +14,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
  * the player's information is loaded from persistent storage and updated
  * with the latest details such as their current in-game name.
  */
+@RequiredArgsConstructor
 public class PlayerJoinListener implements Listener {
 
-    private final PlayerModule playerModule;
-
-    public PlayerJoinListener(PlayerModule playerModule) {
-        this.playerModule = playerModule;
-    }
+    @NonNull private final PlayerModule playerModule;
 
     /**
      * Handles the PlayerJoinEvent triggered when a player joins the server.
@@ -28,7 +27,7 @@ public class PlayerJoinListener implements Listener {
      * @param event The PlayerJoinEvent triggered by the server.
      */
     @EventHandler
-    public void handleJoin(PlayerJoinEvent event) {
+    public void handleJoin(@NonNull PlayerJoinEvent event) {
         GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
         String uuid = event.getPlayer().getUniqueId().toString();
 

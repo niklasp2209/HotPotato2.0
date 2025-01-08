@@ -14,9 +14,9 @@ import java.util.List;
 @Getter
 public abstract class CustomGameStates {
 
-    private final GameModule gameModule;
+    @NonNull private final GameModule gameModule;
     private List<Listener> listeners;
-    private final String name;
+    @NonNull private final String name;
 
     public CustomGameStates(@NonNull GameModule gameModule, @NonNull String name) {
         this.gameModule = gameModule;

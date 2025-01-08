@@ -22,10 +22,10 @@ import java.util.HashMap;
 @Setter
 public abstract class CustomModule {
 
-    private final HotPotato hotPotato;
-    private final String moduleName;
-    private List<Listener> listeners;
-    private Map<String, CommandExecutor> commandExecutors;
+    @NonNull private final HotPotato hotPotato;
+    @NonNull private final String moduleName;
+    @NonNull private List<Listener> listeners;
+    @NonNull private Map<String, CommandExecutor> commandExecutors;
 
     public CustomModule(@NonNull HotPotato hotPotato, @NonNull String name) {
         this.hotPotato = hotPotato;

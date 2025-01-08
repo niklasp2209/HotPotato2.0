@@ -23,8 +23,8 @@ import java.util.Arrays;
 @Getter
 public class PlayerModule extends CustomModule {
 
-    private final SQLManager sqlManager;
-    private final GamePlayerManager gamePlayerManager;
+    @NonNull private final SQLManager sqlManager;
+    @NonNull private final GamePlayerManager gamePlayerManager;
 
     public PlayerModule(@NonNull HotPotato hotPotato) {
         super(hotPotato, "Player");

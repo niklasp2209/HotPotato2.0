@@ -1,6 +1,7 @@
 package de.bukkitnews.hotpotato.module.arena.events;
 
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,10 +10,15 @@ import org.bukkit.event.HandlerList;
  * Event triggered when the voting has finished.
  * This event is used to signal that the voting process has been completed.
  */
+@Getter
 public class VotingFinishedEvent extends Event {
 
-    private static final HandlerList handlerList = new HandlerList();
+    @NonNull private static final HandlerList handlerList = new HandlerList();
 
+    /**
+     * -- GETTER --
+     *  Gets the winner arena of the vote.
+     */
     private final Arena winnerArena;
 
     /**
@@ -34,12 +40,4 @@ public class VotingFinishedEvent extends Event {
         return handlerList;
     }
 
-    /**
-     * Gets the winner arena of the vote.
-     *
-     * @return The arena that was selected as the winner.
-     */
-    public Arena getWinnerArena() {
-        return winnerArena;
-    }
 }

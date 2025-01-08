@@ -5,6 +5,7 @@ import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,13 +15,10 @@ import org.bukkit.entity.Player;
  * Command handler for the HotPotato plugin.
  * This class is responsible for handling the HotPotato commands and executing the appropriate actions.
  */
+@RequiredArgsConstructor
 public class HotPotatoCommand implements CommandExecutor {
 
-    private final GameModule gameModule;
-
-    public HotPotatoCommand(GameModule gameModule) {
-        this.gameModule = gameModule;
-    }
+    @NonNull private final GameModule gameModule;
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {

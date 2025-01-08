@@ -18,13 +18,13 @@ import java.util.UUID;
 @Getter @Setter
 public class GamePlayer {
 
-    private final String uuid;
+    @NonNull private final String uuid;
     private final Map<String, Object> data;
     private boolean alive;
     private boolean voted;
     private boolean isPotato;
 
-    public GamePlayer(String uuid) {
+    public GamePlayer(@NonNull String uuid) {
         this.uuid = uuid;
         this.data = new HashMap<>();
         this.alive = true;
