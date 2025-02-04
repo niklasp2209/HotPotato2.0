@@ -2,12 +2,12 @@ package de.bukkitnews.hotpotato.module.scoreboard.model;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,11 @@ import java.util.UUID;
  */
 public class ScoreboardController {
 
-    @NonNull private final HotPotato hotPotato;
-    @NonNull private final List<ScoreboardElement> elements;
-    @NonNull private Optional<Scoreboard> scoreboard = Optional.empty();
+    private final @NotNull HotPotato hotPotato;
+    private final @NotNull List<ScoreboardElement> elements;
+    private @NotNull Optional<Scoreboard> scoreboard = Optional.empty();
 
-    public ScoreboardController(@NonNull HotPotato hotPotato) {
+    public ScoreboardController(@NotNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;
         this.elements = new ArrayList<>();
     }
@@ -36,7 +36,7 @@ public class ScoreboardController {
      *
      * @param scoreboardElement The element to add to the scoreboard
      */
-    public void registerElement(@NonNull ScoreboardElement scoreboardElement) {
+    public void registerElement(@NotNull ScoreboardElement scoreboardElement) {
         elements.add(scoreboardElement);
     }
 
@@ -47,7 +47,7 @@ public class ScoreboardController {
      *
      * @param gamePlayer The player to apply the scoreboard to
      */
-    public void applyScoreboard(@NonNull GamePlayer gamePlayer) {
+    public void applyScoreboard(@NotNull GamePlayer gamePlayer) {
         Scoreboard newScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = newScoreboard.registerNewObjective("hotpotato", Criteria.DUMMY, "§lHot Potato");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -67,7 +67,7 @@ public class ScoreboardController {
      *
      * @param gamePlayer The player whose scoreboard elements should be updated
      */
-    public void updateScoreboard(@NonNull GamePlayer gamePlayer) {
+    public void updateScoreboard(@NotNull GamePlayer gamePlayer) {
         elements.forEach(element -> element.update(gamePlayer));
     }
 

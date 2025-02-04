@@ -1,15 +1,14 @@
 package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
-import de.bukkitnews.hotpotato.exception.ModuleNotEnabledException;
 import de.bukkitnews.hotpotato.module.achievement.AchievementModule;
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.scoreboard.ScoreboardModule;
-import lombok.NonNull;
+import de.bukkitnews.hotpotato.module.stats.StatsModule;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -19,10 +18,10 @@ import java.util.Optional;
  */
 public final class ModuleManager {
 
-    @NonNull private final HotPotato hotPotato;
-    @NonNull private final LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
+    private final @NotNull HotPotato hotPotato;
+    private final @NotNull LinkedHashMap<Class<? extends CustomModule>, CustomModule> modules;
 
-    public ModuleManager(@NonNull HotPotato hotPotato) {
+    public ModuleManager(@NotNull HotPotato hotPotato) {
         this.hotPotato = hotPotato;
         this.modules = new LinkedHashMap<>();
     }
@@ -32,11 +31,12 @@ public final class ModuleManager {
      * This method is responsible for starting all modules in the system.
      */
     public void activateModules() {
-        this.modules.put(GameModule.class, new GameModule(this.hotPotato));
-        this.modules.put(PlayerModule.class, new PlayerModule(this.hotPotato));
-        this.modules.put(ArenaModule.class, new ArenaModule(this.hotPotato));
-        this.modules.put(ScoreboardModule.class, new ScoreboardModule(this.hotPotato));
-        this.modules.put(AchievementModule.class, new AchievementModule(this.hotPotato));
+        modules.put(GameModule.class, new GameModule(hotPotato));
+        modules.put(PlayerModule.class, new PlayerModule(hotPotato));
+        modules.put(ArenaModule.class, new ArenaModule(hotPotato));
+        modules.put(ScoreboardModule.class, new ScoreboardModule(hotPotato));
+        modules.put(AchievementModule.class, new AchievementModule(hotPotato));
+        modules.put(StatsModule.class, new StatsModule(hotPotato));
 
         loadModules();
     }
@@ -53,19 +53,15 @@ public final class ModuleManager {
      * Loads all modules into the system by invoking their activation methods.
      */
     private void loadModules() {
-        this.modules.forEach((moduleClass, customModuleInstance) -> {
-            customModuleInstance.activate();
-        });
+        modules.forEach((moduleClass, customModuleInstance) -> customModuleInstance.activate());
     }
 
     /**
      * Removes all modules from the system by calling their deactivation methods.
      */
     private void unloadModules() {
-        this.modules.forEach((moduleClass, customModuleInstance) -> {
-            customModuleInstance.deactivate();
-        });
-        this.modules.clear();
+        modules.forEach((moduleClass, customModuleInstance) -> customModuleInstance.deactivate());
+        modules.clear();
     }
 
     /**
@@ -74,7 +70,7 @@ public final class ModuleManager {
      * @param moduleClass The class of the module to be retrieved.
      * @return The requested module if it exists, otherwise null.
      */
-    public <T extends CustomModule> Optional<T> getModule(Class<T> moduleClass) {
+    public @NotNull <T extends CustomModule> Optional<T> getModule(Class<T> moduleClass) {
         return Optional.ofNullable((T) modules.get(moduleClass));
     }
 

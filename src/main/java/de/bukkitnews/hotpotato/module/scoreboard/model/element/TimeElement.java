@@ -2,9 +2,9 @@ package de.bukkitnews.hotpotato.module.scoreboard.model.element;
 
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.scoreboard.model.ScoreboardElement;
-import lombok.NonNull;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The TimeElement represents a scoreboard element that displays the remaining time
@@ -19,14 +19,14 @@ public class TimeElement extends ScoreboardElement {
     }
 
     @Override
-    public void applyToScoreboard(@NonNull Objective objective, int scoreIndex) {
+    public void applyToScoreboard(@NotNull Objective objective, int scoreIndex) {
         String displayName = getLabel() + ": " + getDefaultValue();
         Score score = objective.getScore(displayName);
         score.setScore(scoreIndex);
     }
 
     @Override
-    public void update(@NonNull GamePlayer gamePlayer) {
+    public void update(@NotNull GamePlayer gamePlayer) {
         int time = 0;
         String displayName = getLabel() + ": " + time;
     }

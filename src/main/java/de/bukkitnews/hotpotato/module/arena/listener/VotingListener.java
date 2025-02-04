@@ -1,7 +1,7 @@
-package de.bukkitnews.hotpotato.module.arena.voting;
+package de.bukkitnews.hotpotato.module.arena.listener;
 
+import de.bukkitnews.hotpotato.module.arena.voting.Voting;
 import de.bukkitnews.hotpotato.util.MessageUtil;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,14 +9,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class VotingListener implements Listener {
 
-    @NonNull private final Voting voting;
+    private final @NotNull Voting voting;
 
-    public VotingListener(@NonNull Voting voting) {
+    public VotingListener(@NotNull Voting voting) {
         this.voting = voting;
     }
 
@@ -27,7 +28,7 @@ public class VotingListener implements Listener {
      * @param event The InventoryClickEvent triggered when a player clicks in an inventory.
      */
     @EventHandler
-    public void handleInventoryClick(@NonNull InventoryClickEvent event) {
+    public void handleInventoryClick(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         if (!event.getView().getTitle().equals(MessageUtil.getMessage("inventory_voting"))) {
@@ -42,10 +43,10 @@ public class VotingListener implements Listener {
                     .map(itemMeta -> itemMeta.getPersistentDataContainer().get(
                             new NamespacedKey("hotpotato", "arena_id"),
                             PersistentDataType.STRING))
-                    .flatMap(arenaName -> this.voting.getArenaList().stream()
+                    .flatMap(arenaName -> voting.getArenaList().stream()
                             .filter(arena -> arena.getName().equals(arenaName))
                             .findFirst())
-                    .ifPresent(selectedArena -> this.voting.vote(player, selectedArena));
+                    .ifPresent(selectedArena -> voting.vote(player, selectedArena));
         }
     }
 }

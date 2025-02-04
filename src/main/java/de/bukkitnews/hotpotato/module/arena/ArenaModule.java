@@ -2,29 +2,23 @@ package de.bukkitnews.hotpotato.module.arena;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
-import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.module.arena.voting.Voting;
-import de.bukkitnews.hotpotato.module.arena.voting.VotingListener;
-import de.bukkitnews.hotpotato.module.database.ConfigManager;
-import de.bukkitnews.hotpotato.module.player.PlayerModule;
-import de.bukkitnews.hotpotato.module.player.listener.PlayerJoinListener;
-import de.bukkitnews.hotpotato.module.player.listener.PlayerQuitListener;
+import de.bukkitnews.hotpotato.module.arena.listener.VotingListener;
+import de.bukkitnews.hotpotato.config.ConfigManager;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
 public class ArenaModule extends CustomModule {
 
-    @NonNull private final ConfigManager arenaConfig;
-    @NonNull private final HotPotato hotPotato;
+    private final @NotNull ConfigManager arenaConfig;
+    private final @NotNull HotPotato hotPotato;
 
     private Voting voting;
 
-    public ArenaModule(@NonNull HotPotato hotPotato) {
+    public ArenaModule(@NotNull HotPotato hotPotato) {
         super(hotPotato, "Arena");
 
         this.hotPotato = hotPotato;
@@ -37,17 +31,13 @@ public class ArenaModule extends CustomModule {
      */
     @Override
     public void activate() {
-        this.voting = new Voting(this);
+        voting = new Voting(this);
+        voting.initVoting();
+
         setListeners(List.of(new VotingListener(voting)));
-        this.voting.initVoting();
     }
 
-    /**
-     * Deactivates the Arena module. This method is called when the module is disabled.
-     * In this case, no additional cleanup is needed.
-     */
     @Override
     public void deactivate() {
-
     }
 }

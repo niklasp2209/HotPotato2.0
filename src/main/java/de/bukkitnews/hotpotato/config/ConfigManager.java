@@ -1,10 +1,11 @@
-package de.bukkitnews.hotpotato.module.database;
+package de.bukkitnews.hotpotato.config;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -16,12 +17,12 @@ import java.io.IOException;
  * exists and is accessible.
  */
 public class ConfigManager {
-    @NonNull private final HotPotato hotPotato;
-    @NonNull private final String fileName;
+    private final @NotNull HotPotato hotPotato;
+    private final @NotNull String fileName;
     private File configFile;
     private FileConfiguration fileConfiguration;
 
-    public ConfigManager(@NonNull HotPotato hotPotato, @NonNull String fileName) {
+    public ConfigManager(@NotNull HotPotato hotPotato, @NotNull String fileName) {
         this.hotPotato = hotPotato;
         this.fileName = fileName;
         setup();
@@ -33,14 +34,14 @@ public class ConfigManager {
      * default configuration resource from the plugin's JAR file.
      */
     private void setup() {
-        this.configFile = new File(this.hotPotato.getDataFolder(), this.fileName);
+        this.configFile = new File(hotPotato.getDataFolder(), fileName);
 
-        if (!this.configFile.exists()) {
-            this.hotPotato.getDataFolder().mkdirs();
-            this.hotPotato.saveResource(this.fileName, false);
+        if (!configFile.exists()) {
+            hotPotato.getDataFolder().mkdirs();
+            hotPotato.saveResource(fileName, false);
         }
 
-        this.fileConfiguration = YamlConfiguration.loadConfiguration(this.configFile);
+        this.fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 
     /**
@@ -48,8 +49,8 @@ public class ConfigManager {
      *
      * @return The FileConfiguration object containing the loaded configuration data
      */
-    public FileConfiguration getConfig() {
-        return this.fileConfiguration;
+    public @NotNull FileConfiguration getConfig() {
+        return fileConfiguration;
     }
 
     /**
@@ -57,9 +58,9 @@ public class ConfigManager {
      */
     public void save() {
         try {
-            this.fileConfiguration.save(this.configFile);
+            fileConfiguration.save(configFile);
         } catch (IOException e) {
-            this.hotPotato.getLogger().severe("Could not save config file: " + this.fileName);
+            hotPotato.getLogger().severe("Could not save config file: " + fileName);
             e.printStackTrace();
         }
     }
@@ -68,7 +69,7 @@ public class ConfigManager {
      * Reloads the configuration from the file, refreshing the configuration data.
      */
     public void reload() {
-        this.fileConfiguration = YamlConfiguration.loadConfiguration(this.configFile);
+        this.fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 
     /**
@@ -77,6 +78,6 @@ public class ConfigManager {
      * @return true if the configuration file exists, false otherwise
      */
     public boolean configExists() {
-        return this.configFile.exists();
+        return configFile.exists();
     }
 }

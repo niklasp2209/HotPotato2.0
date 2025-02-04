@@ -1,6 +1,6 @@
 package de.bukkitnews.hotpotato.module.game.util;
 
-import de.bukkitnews.hotpotato.util.ItemUtil;
+import de.bukkitnews.hotpotato.util.ItemBuilder;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -12,12 +12,12 @@ import org.bukkit.inventory.ItemStack;
 @UtilityClass
 public class GameItems {
 
-    public static final ItemStack ITEM_LOBBY_VOTING = new ItemUtil(Material.PAPER)
+    public static final ItemStack ITEM_LOBBY_VOTING = new ItemBuilder(Material.PAPER)
             .setDisplayname("Map Voting")
             .setLore(" ", "Rechtsklick zum öffnen.")
             .build();
 
-    public static final ItemStack ITEM_LOBBY_LEAVE = new ItemUtil(Material.MAGMA_CREAM)
+    public static final ItemStack ITEM_LOBBY_LEAVE = new ItemBuilder(Material.MAGMA_CREAM)
             .setDisplayname("Runde verlassen")
             .setLore(" ", "Rechtsklick zum verlassen.")
             .build();

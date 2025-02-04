@@ -3,12 +3,12 @@ package de.bukkitnews.hotpotato.module.game.commands;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.lobby.LobbyState;
 import de.bukkitnews.hotpotato.util.MessageUtil;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Command class to start the game countdown from the lobby.
@@ -17,34 +17,29 @@ import org.bukkit.entity.Player;
 @RequiredArgsConstructor
 public class StartCommand implements CommandExecutor {
 
-    @NonNull
-    private final GameModule gameModule;
+    private final @NotNull GameModule gameModule;
     private final int STARTING_TIME = 5;
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             return true;
         }
 
-        if (!(this.gameModule.getCurrentState().isPresent() &&
-                this.gameModule.getCurrentState().get() instanceof LobbyState)) {
+        if (!(gameModule.getCurrentState().isPresent() &&
+                gameModule.getCurrentState().get() instanceof LobbyState lobbyState)) {
             player.sendMessage(MessageUtil.getMessage("lobby_start"));
             return true;
         }
 
-        LobbyState lobbyState = (LobbyState) this.gameModule.getCurrentState().get();
-
-        // Check if the lobby countdown is already close to or below the starting time.
-        if (lobbyState.getLobbyTask().getSeconds() <= STARTING_TIME) {
+        if (lobbyState.getLobbyCountdown().getSeconds() <= STARTING_TIME) {
             player.sendMessage(MessageUtil.getMessage("lobby_start_already"));
             return true;
         }
 
-        // Set the lobby countdown to the predefined starting time and notify the player.
-        lobbyState.getLobbyTask().setSeconds(STARTING_TIME);
+        lobbyState.getLobbyCountdown().setSeconds(STARTING_TIME);
         player.sendMessage(MessageUtil.getMessage("lobby_started"));
 
-        return false;
+        return true;
     }
 }

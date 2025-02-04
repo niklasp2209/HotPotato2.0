@@ -4,22 +4,18 @@ import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
 import de.bukkitnews.hotpotato.module.game.commands.HotPotatoCommand;
 import de.bukkitnews.hotpotato.module.game.commands.StartCommand;
-import de.bukkitnews.hotpotato.module.game.commands.StatsCommand;
-import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import de.bukkitnews.hotpotato.module.game.gamestate.AbstractGameState;
 import de.bukkitnews.hotpotato.module.game.gamestate.ending.EndingState;
-import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
 import de.bukkitnews.hotpotato.module.game.gamestate.lobby.LobbyState;
-import de.bukkitnews.hotpotato.module.game.listener.AsyncPlayerChatListener;
-import de.bukkitnews.hotpotato.module.game.listener.BlockedListener;
-import de.bukkitnews.hotpotato.module.game.listener.PlayerConnectionListener;
-import de.bukkitnews.hotpotato.module.game.listener.PlayerInteractListener;
+import de.bukkitnews.hotpotato.module.game.listener.player.AsyncPlayerChatListener;
+import de.bukkitnews.hotpotato.module.game.listener.player.PlayerInteractListener;
+import de.bukkitnews.hotpotato.module.game.listener.player.PlayerJoinListener;
+import de.bukkitnews.hotpotato.module.game.listener.player.PlayerQuitListener;
+import de.bukkitnews.hotpotato.module.game.listener.world.*;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.Getter;
-import lombok.NonNull;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -31,11 +27,10 @@ import java.util.*;
 @Getter
 public class GameModule extends CustomModule {
 
-    @NonNull private Optional<CustomGameStates> currentState;
+    private @NotNull Optional<AbstractGameState> currentState = Optional.empty();
 
-    public GameModule(@NonNull HotPotato hotPotato) {
+    public GameModule(@NotNull HotPotato hotPotato) {
         super(hotPotato, "Game");
-        this.currentState = Optional.empty();
     }
 
     /**
@@ -47,16 +42,20 @@ public class GameModule extends CustomModule {
         this.currentState = Optional.of(new LobbyState(this));
         setListeners(Arrays.asList(
                 new AsyncPlayerChatListener(this),
-                new BlockedListener(),
-                new PlayerConnectionListener(this),
+                new BlockBreakListener(),
+                new BlockPlaceListener(),
+                new EntityDamageListener(),
+                new EntitySpawnListener(),
+                new FoodLevelChangeListener(),
+                new PlayerJoinListener(this),
+                new PlayerQuitListener(this),
                 new PlayerInteractListener(this)
         ));
 
         getCommandExecutors().put("hotpotato", new HotPotatoCommand(this));
         getCommandExecutors().put("start", new StartCommand(this));
-        getCommandExecutors().put("stats", new StatsCommand(this));
 
-        this.currentState.ifPresent(CustomGameStates::start);
+        currentState.ifPresent(AbstractGameState::activate);
     }
 
     /**
@@ -64,7 +63,7 @@ public class GameModule extends CustomModule {
      */
     @Override
     public void deactivate() {
-        currentState.ifPresent(CustomGameStates::stop);
+        currentState.ifPresent(AbstractGameState::deactivate);
         this.currentState = Optional.empty();
     }
 
@@ -73,10 +72,10 @@ public class GameModule extends CustomModule {
      *
      * @param newState The new state to transition to.
      */
-    public void setCurrentState(@NonNull CustomGameStates newState) {
-        this.currentState.ifPresent(CustomGameStates::deactivate);
+    public void setCurrentState(@NotNull AbstractGameState newState) {
+        currentState.ifPresent(AbstractGameState::deactivate);
         this.currentState = Optional.of(newState);
-        newState.start();
+        newState.activate();
     }
 
     /**
@@ -84,12 +83,15 @@ public class GameModule extends CustomModule {
      * Sets the player's status to dead and switches their game mode to spectator.
      */
     public void eliminatePlayer() {
-        for(GamePlayer gamePlayer : getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
-                .getGamePlayerManager().getPlayerCache().values()){
-            if(gamePlayer.isPotato()){
-                gamePlayer.eliminatePlayer();
-            }
-        }
+        getHotPotato().getModuleManager()
+                .getModule(PlayerModule.class)
+                .map(PlayerModule::getGamePlayerManager)
+                .map(manager -> manager.getPlayerCache().values())
+                .ifPresent(players -> players.forEach(gamePlayer -> {
+                    if (gamePlayer.isPotato()) {
+                        gamePlayer.eliminatePlayer();
+                    }
+                }));
     }
 
     /**
@@ -97,14 +99,17 @@ public class GameModule extends CustomModule {
      * should proceed, end, or transition to a different state.
      */
     private void checkRemainingPlayers() {
-        long aliveCount = getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
-                .getGamePlayerManager().getPlayerCache().values().stream()
-                .filter(GamePlayer::isAlive)
-                .count();
-
-        if (aliveCount <= 1) {
-            this.setCurrentState(new EndingState(this));
-        }
+        getHotPotato().getModuleManager()
+                .getModule(PlayerModule.class)
+                .map(PlayerModule::getGamePlayerManager)
+                .map(manager -> manager.getPlayerCache().values().stream()
+                        .filter(GamePlayer::isAlive)
+                        .count())
+                .ifPresent(aliveCount -> {
+                    if (aliveCount <= 1) {
+                        setCurrentState(new EndingState(this));
+                    }
+                });
     }
 
 }

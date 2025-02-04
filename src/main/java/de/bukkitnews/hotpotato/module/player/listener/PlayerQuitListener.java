@@ -1,18 +1,18 @@
 package de.bukkitnews.hotpotato.module.player.listener;
 
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
-import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Listener for handling player quit events in the game.
- *
+ * <p>
  * This class listens for the {@link PlayerQuitEvent} and ensures that
  * a player's data is saved before they leave the server. It interacts
  * with the {@link GamePlayerManager} to manage and persist player data
@@ -21,11 +21,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 @RequiredArgsConstructor
 public class PlayerQuitListener implements Listener {
 
-    @NonNull private final PlayerModule playerModule;
+    private final @NotNull PlayerModule playerModule;
 
     /**
      * Handles the {@link PlayerQuitEvent} when a player leaves the server.
-     *
+     * <p>
      * The method retrieves the player's data from the cache and saves it
      * asynchronously using the {@link GamePlayerManager}. If the player
      * is not found in the cache, no action is taken.
@@ -33,14 +33,10 @@ public class PlayerQuitListener implements Listener {
      * @param event The {@link PlayerQuitEvent} triggered when a player disconnects.
      */
     @EventHandler
-    public void handleQuit(@NonNull PlayerQuitEvent event) {
-        GamePlayerManager gamePlayerManager = this.playerModule.getGamePlayerManager();
+    public void handleQuit(@NotNull PlayerQuitEvent event) {
+        GamePlayerManager gamePlayerManager = playerModule.getGamePlayerManager();
 
-        String uuid = event.getPlayer().getUniqueId().toString();
-
-        GamePlayer gamePlayer = gamePlayerManager.getCachedPlayer(uuid);
-        if (gamePlayer != null) {
-            gamePlayerManager.savePlayer(gamePlayer);
-        }
+        Optional.of(gamePlayerManager.getCachedPlayer(event.getPlayer().getUniqueId().toString()))
+                .ifPresent(gamePlayerManager::savePlayer);
     }
 }

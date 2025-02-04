@@ -1,10 +1,11 @@
-package de.bukkitnews.hotpotato.module.database;
+package de.bukkitnews.hotpotato.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.bukkitnews.hotpotato.HotPotato;
-import lombok.NonNull;
+import de.bukkitnews.hotpotato.config.ConfigManager;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class SQLManager {
 
-    @NonNull private final HotPotato hotPotato;
-    @NonNull private final HikariDataSource hikariDataSource;
+     private final @NotNull HotPotato hotPotato;
+     private final @NotNull HikariDataSource hikariDataSource;
 
     /**
      * Constructor for initializing the SQLManager and establishing a connection to the MySQL database.
@@ -26,31 +27,26 @@ public class SQLManager {
      *
      * @param configManager The ConfigManager instance to load database configuration settings
      */
-    public SQLManager(@NonNull HotPotato hotPotato, @NonNull ConfigManager configManager) {
+    public SQLManager(@NotNull HotPotato hotPotato, @NotNull ConfigManager configManager) {
         this.hotPotato = hotPotato;
 
         FileConfiguration fileConfiguration = configManager.getConfig();
         HikariConfig hikariConfig = new HikariConfig();
 
-        // Set the JDBC URL, username, password, and pool settings based on the configuration
         hikariConfig.setJdbcUrl("jdbc:mysql://" + fileConfiguration.getString("mysql.host") + ":" +
                 fileConfiguration.getInt("mysql.port") + "/" + fileConfiguration.getString("mysql.database"));
         hikariConfig.setUsername(fileConfiguration.getString("mysql.username"));
         hikariConfig.setPassword(fileConfiguration.getString("mysql.password"));
 
-        // Set connection pool properties from the configuration
         hikariConfig.setMaximumPoolSize(fileConfiguration.getInt("mysql.pool.maximumPoolSize", 10));
         hikariConfig.setMinimumIdle(fileConfiguration.getInt("mysql.pool.minimumIdle", 2));
         hikariConfig.setIdleTimeout(fileConfiguration.getLong("mysql.pool.idleTimeout", 10000));
         hikariConfig.setMaxLifetime(fileConfiguration.getLong("mysql.pool.maxLifetime", 1800000));
 
-        // Initialize the HikariDataSource with the configuration
         this.hikariDataSource = new HikariDataSource(hikariConfig);
 
-        // Log successful database connection
-        this.hotPotato.getLogger().info("Successfully connected to the database.");
+        hotPotato.getLogger().info("Successfully connected to the database.");
 
-        // Create the 'hotpotato' table if it doesn't exist
         createTable("hotpotato", "id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "uuid VARCHAR(36), " +
                 "name VARCHAR(16), " +
@@ -65,12 +61,12 @@ public class SQLManager {
      * @param query The SQL query to execute
      * @return A CompletableFuture representing the asynchronous operation
      */
-    public CompletableFuture<Void> executeAsync(@NonNull String query) {
+    public @NotNull CompletableFuture<Void> executeAsync(@NotNull String query) {
         return CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection()) {
                 connection.createStatement().execute(query);
             } catch (SQLException e) {
-                this.hotPotato.getLogger().severe("Error executing query: " + query);
+                hotPotato.getLogger().severe("Error executing query: " + query);
             }
         });
     }
@@ -81,16 +77,16 @@ public class SQLManager {
      * @return A database connection
      * @throws SQLException If a connection cannot be established
      */
-    public Connection getConnection() throws SQLException {
-        return this.hikariDataSource.getConnection();
+    public @NotNull Connection getConnection() throws SQLException {
+        return hikariDataSource.getConnection();
     }
 
     /**
      * Closes the HikariDataSource, releasing all database connections.
      */
     public void close() {
-        if (this.hikariDataSource != null && !this.hikariDataSource.isClosed()) {
-            this.hikariDataSource.close();
+        if (!hikariDataSource.isClosed()) {
+            hikariDataSource.close();
         }
     }
 
@@ -101,13 +97,13 @@ public class SQLManager {
      * @param tableName   The name of the table to create
      * @param tableSchema The schema definition of the table
      */
-    public void createTable(@NonNull String tableName, @NonNull String tableSchema) {
+    public void createTable(@NotNull String tableName, @NotNull String tableSchema) {
         String query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + tableSchema + ");";
 
         executeAsync(query).thenRun(() ->
-                this.hotPotato.getLogger().info("Table '" + tableName + "' has been created or already exists.")
+                hotPotato.getLogger().info("Table '" + tableName + "' has been created or already exists.")
         ).exceptionally(e -> {
-            this.hotPotato.getLogger().severe("Error creating table: " + e.getMessage());
+            hotPotato.getLogger().severe("Error creating table: " + e.getMessage());
             return null;
         });
     }

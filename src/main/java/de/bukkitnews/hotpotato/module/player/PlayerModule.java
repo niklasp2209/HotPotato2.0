@@ -2,13 +2,13 @@ package de.bukkitnews.hotpotato.module.player;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import de.bukkitnews.hotpotato.module.CustomModule;
-import de.bukkitnews.hotpotato.module.database.SQLManager;
+import de.bukkitnews.hotpotato.database.SQLManager;
 import de.bukkitnews.hotpotato.module.player.handler.PlaytimeHandler;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerJoinListener;
 import de.bukkitnews.hotpotato.module.player.listener.PlayerQuitListener;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayerManager;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Arrays;
@@ -16,22 +16,22 @@ import java.util.Arrays;
 /**
  * The PlayerModule class handles all player-related functionality in the HotPotato plugin.
  * It integrates player data management, event listeners, and Redis/SQL storage handling.
- *
+ * <p>
  * This module is part of a modular plugin system, extending the CustomModule base class.
  * It utilizes a Redis-backed caching mechanism and a fallback SQL database to manage player data.
  */
 @Getter
 public class PlayerModule extends CustomModule {
 
-    @NonNull private final SQLManager sqlManager;
-    @NonNull private final GamePlayerManager gamePlayerManager;
+    private final @NotNull SQLManager sqlManager;
+    private final @NotNull GamePlayerManager gamePlayerManager;
 
-    public PlayerModule(@NonNull HotPotato hotPotato) {
+    public PlayerModule(@NotNull HotPotato hotPotato) {
         super(hotPotato, "Player");
 
-        this.sqlManager = this.getHotPotato().getSqlManager();
+        this.sqlManager = getHotPotato().getSqlManager();
         gamePlayerManager = new GamePlayerManager(
-                sqlManager, new JedisPool("localhost", 6379), this.getHotPotato().getLogger());
+                sqlManager, new JedisPool("localhost", 6379), getHotPotato().getLogger());
 
         new PlaytimeHandler(this).startHandler();
     }

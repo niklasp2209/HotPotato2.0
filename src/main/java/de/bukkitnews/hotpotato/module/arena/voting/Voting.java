@@ -2,12 +2,9 @@ package de.bukkitnews.hotpotato.module.arena.voting;
 
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
-import de.bukkitnews.hotpotato.module.player.PlayerModule;
-import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
-import de.bukkitnews.hotpotato.util.ItemUtil;
+import de.bukkitnews.hotpotato.util.ItemBuilder;
 import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,10 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -27,10 +23,11 @@ import java.util.stream.Collectors;
 public class Voting {
 
     private static final int VOTING_MAP_AMOUNT = 2;
-    @NonNull private final ArenaModule arenaModule;
-    @NonNull private final List<Arena> arenaList;
 
-    public Voting(@NonNull ArenaModule arenaModule) {
+    private final @NotNull ArenaModule arenaModule;
+    private final @NotNull List<Arena> arenaList;
+
+    public Voting(@NotNull ArenaModule arenaModule) {
         this.arenaModule = arenaModule;
         this.arenaList = new CopyOnWriteArrayList<>();
     }
@@ -44,9 +41,10 @@ public class Voting {
 
             if (playableArenas.size() < VOTING_MAP_AMOUNT) {
                 arenaModule.getHotPotato().getLogger().info("Not enough playable maps set up");
-            } else {
-                arenaList.addAll(chooseRandomMaps(playableArenas));
+                return;
             }
+
+            arenaList.addAll(chooseRandomMaps(playableArenas));
         });
     }
 
@@ -55,7 +53,7 @@ public class Voting {
      *
      * @return List of playable arenas.
      */
-    private List<Arena> loadPlayableArenas() {
+    private @NotNull List<Arena> loadPlayableArenas() {
         return arenaModule.getArenaConfig()
                 .getConfig()
                 .getConfigurationSection(".Arenas").getKeys(false)
@@ -71,7 +69,7 @@ public class Voting {
      * @param playableArenas List of playable arenas.
      * @return List of randomly selected arenas.
      */
-    private List<Arena> chooseRandomMaps(@NonNull List<Arena> playableArenas) {
+    private @NotNull List<Arena> chooseRandomMaps(@NotNull List<Arena> playableArenas) {
         Collections.shuffle(playableArenas);
         return playableArenas.stream()
                 .limit(VOTING_MAP_AMOUNT)
@@ -83,7 +81,7 @@ public class Voting {
      *
      * @return The arena with the highest number of votes.
      */
-    public Arena getVotingWinner() {
+    public @NotNull Arena getVotingWinner() {
         return arenaList.stream()
                 .max(Comparator.comparingInt(Arena::getVotes))
                 .orElseThrow(() -> new IllegalStateException("No arenas available for voting"));
@@ -94,19 +92,17 @@ public class Voting {
      *
      * @param player The player for whom the inventory is created.
      */
-    public void createVotingInventory(@NonNull Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 9, MessageUtil.getMessage("Abstimmung"));
-
+    public void createVotingInventory(@NotNull Player player) {
+        Inventory inventory = Bukkit.createInventory(null, 9, MessageUtil.getMessage("voting"));
         NamespacedKey namespacedKey = new NamespacedKey("hotpotato", "arena_id");
 
         arenaList.forEach(arena -> {
-            ItemStack itemStack = new ItemUtil(Material.PAPER)
+            ItemStack itemStack = new ItemBuilder(Material.PAPER)
                     .setDisplayname(arena.getName())
                     .setLore("Votes: " + arena.getVotes())
                     .build();
 
             itemStack.getItemMeta().getPersistentDataContainer().set(namespacedKey, PersistentDataType.STRING, arena.getName());
-
             inventory.addItem(itemStack);
         });
 
@@ -120,18 +116,19 @@ public class Voting {
      * @param player The player who is voting.
      * @param arena  The arena that the player is voting for.
      */
-    public void vote(@NonNull Player player, @NonNull Arena arena) {
-        GamePlayer gamePlayer = this.arenaModule.getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
-                .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
+    public void vote(@NotNull Player player, @NotNull Arena arena) {
+        UUID playerUUID = player.getUniqueId();
 
-        if (gamePlayer.isVoted()) {
+        if (arenaList.stream().anyMatch(a -> a.getVotedPlayers().contains(playerUUID))) {
             player.sendMessage(MessageUtil.getMessage("voting_already"));
             return;
         }
 
-        arena.addVote();
-        gamePlayer.setVoted(true);
-        player.sendMessage(MessageUtil.getMessage("voting_map", arena.getName()));
-        player.closeInventory();
+        if (arena.addVote(playerUUID)) {
+            player.sendMessage(MessageUtil.getMessage("voting_map", arena.getName()));
+            player.closeInventory();
+        } else {
+            player.sendMessage(MessageUtil.getMessage("voting_already"));
+        }
     }
 }

@@ -1,14 +1,13 @@
 package de.bukkitnews.hotpotato.module.game.gamestate.lobby;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
-import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
-import de.bukkitnews.hotpotato.module.game.gamestate.lobby.task.LobbyTask;
+import de.bukkitnews.hotpotato.module.game.gamestate.AbstractGameState;
 import de.bukkitnews.hotpotato.module.game.util.GameItems;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the lobby state of the game.
@@ -16,19 +15,19 @@ import org.bukkit.entity.Player;
  * Manages the lobby countdown and handles player interactions during this phase.
  */
 @Getter
-public class LobbyState extends CustomGameStates {
+public class LobbyState extends AbstractGameState {
 
-    @NonNull private final LobbyTask lobbyTask;
+    private final @NotNull LobbyCountdown lobbyCountdown;
 
     /**
      * Constructor to initialize the lobby state with the associated game module.
-     * Creates a new {@link LobbyTask} to manage the countdown and idle behavior.
+     * Creates a new {@link LobbyCountdown} to manage the countdown and idle behavior.
      *
      * @param gameModule The game module this state belongs to.
      */
-    public LobbyState(@NonNull GameModule gameModule) {
-        super(gameModule, "Lobby");
-        this.lobbyTask = new LobbyTask(this.getGameModule());
+    public LobbyState(@NotNull GameModule gameModule) {
+        super(gameModule);
+        this.lobbyCountdown = new LobbyCountdown(getGameModule());
     }
 
     /**
@@ -58,13 +57,13 @@ public class LobbyState extends CustomGameStates {
      * @param player The player who joined the game.
      */
     @Override
-    public void onJoin(@NonNull Player player) {
-        giveLobbyItems(player);
+    public void onJoin(@NotNull Player player) {
         player.setGameMode(GameMode.SURVIVAL);
+        giveLobbyItems(player);
         showPlayersToEachOther(player);
 
-        if (Bukkit.getOnlinePlayers().size() >= 2 && !getLobbyTask().isRunning()) {
-            getLobbyTask().start();
+        if (Bukkit.getOnlinePlayers().size() >= 2 && !getLobbyCountdown().isRunning()) {
+            getLobbyCountdown().start();
         }
     }
 
@@ -75,9 +74,9 @@ public class LobbyState extends CustomGameStates {
      * @param player The player who left the game.
      */
     @Override
-    public void onQuit(@NonNull Player player) {
-        if (Bukkit.getOnlinePlayers().size() < 2 && getLobbyTask().isRunning()) {
-            getLobbyTask().startIdle();
+    public void onQuit(@NotNull Player player) {
+        if (Bukkit.getOnlinePlayers().size() < 2 && getLobbyCountdown().isRunning()) {
+            getLobbyCountdown().startIdle();
         }
     }
 
@@ -87,7 +86,7 @@ public class LobbyState extends CustomGameStates {
      *
      * @param player The player to whom the lobby items will be given.
      */
-    private void giveLobbyItems(Player player) {
+    private void giveLobbyItems(@NotNull Player player) {
         player.getInventory().clear();
         player.getInventory().setItem(0, GameItems.ITEM_LOBBY_VOTING);
     }
@@ -98,11 +97,11 @@ public class LobbyState extends CustomGameStates {
      *
      * @param player The player who joined the game and needs to be visible to others.
      */
-    private void showPlayersToEachOther(Player player) {
-        for (Player current : Bukkit.getOnlinePlayers()) {
-            current.showPlayer(player);
-            player.showPlayer(current);
-        }
+    private void showPlayersToEachOther(@NotNull Player player) {
+        Bukkit.getOnlinePlayers()
+                .forEach(current -> {
+                    current.showPlayer(player);
+                    player.showPlayer(current);
+                });
     }
-
 }

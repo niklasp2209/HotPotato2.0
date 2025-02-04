@@ -1,23 +1,23 @@
 package de.bukkitnews.hotpotato.module.game.gamestate.ending;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
-import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
-import lombok.NonNull;
+import de.bukkitnews.hotpotato.module.game.gamestate.AbstractGameState;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the Ending state in the game. This state is triggered when the game ends
  * and the players are no longer able to interact with the game.
  */
-public class EndingState extends CustomGameStates {
+public class EndingState extends AbstractGameState {
 
     /**
      * Constructor to initialize the Ending state.
      *
      * @param gameModule The game module this state belongs to.
      */
-    public EndingState(@NonNull GameModule gameModule) {
-        super(gameModule, "Ending");
+    public EndingState(@NotNull GameModule gameModule) {
+        super(gameModule);
     }
 
     /**
@@ -39,12 +39,12 @@ public class EndingState extends CustomGameStates {
     }
 
     @Override
-    public void onJoin(@NonNull Player player) {
+    public void onJoin(@NotNull Player player) {
         player.kickPlayer("Game has ended");
     }
 
     @Override
-    public void onQuit(@NonNull Player player) {
+    public void onQuit(@NotNull Player player) {
 
     }
 }

@@ -88,6 +88,12 @@
       <classifier>remapped-mojang</classifier>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>25.0.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.target>21</maven.compiler.target>

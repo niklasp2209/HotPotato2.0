@@ -6,7 +6,7 @@ import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.module.scoreboard.model.ScoreboardController;
 import de.bukkitnews.hotpotato.module.scoreboard.model.element.RemainingPlayerElement;
 import de.bukkitnews.hotpotato.module.scoreboard.model.element.TimeElement;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -16,10 +16,10 @@ import java.util.Optional;
  */
 public class ScoreboardModule extends CustomModule {
 
-    @NonNull private Optional<ScoreboardController> lobbyBoard = Optional.empty();
-    @NonNull private Optional<ScoreboardController> ingameBoard = Optional.empty();
+     private @NotNull Optional<ScoreboardController> lobbyBoard = Optional.empty();
+     private @NotNull Optional<ScoreboardController> ingameBoard = Optional.empty();
 
-    public ScoreboardModule(@NonNull HotPotato hotPotato) {
+    public ScoreboardModule(@NotNull HotPotato hotPotato) {
         super(hotPotato, "Game");
     }
 
@@ -29,8 +29,8 @@ public class ScoreboardModule extends CustomModule {
      */
     @Override
     public void activate() {
-        this.lobbyBoard = Optional.of(new ScoreboardController(getHotPotato()));
-        this.lobbyBoard.ifPresent(controller -> {
+        lobbyBoard = Optional.of(new ScoreboardController(getHotPotato()));
+        lobbyBoard.ifPresent(controller -> {
             controller.registerElement(new TimeElement());
         });
 
@@ -50,11 +50,11 @@ public class ScoreboardModule extends CustomModule {
         ingameBoard.ifPresent(ScoreboardController::clearScoreboards);
     }
 
-    public void applyLobbyScoreboard(@NonNull GamePlayer gamePlayer){
+    public void applyLobbyScoreboard(@NotNull GamePlayer gamePlayer){
         lobbyBoard.ifPresent(controller -> controller.applyScoreboard(gamePlayer));
     }
 
-    public void applyIngameScoreboard(@NonNull GamePlayer gamePlayer){
+    public void applyIngameScoreboard(@NotNull GamePlayer gamePlayer){
         ingameBoard.ifPresent(controller -> controller.applyScoreboard(gamePlayer));
     }
 }

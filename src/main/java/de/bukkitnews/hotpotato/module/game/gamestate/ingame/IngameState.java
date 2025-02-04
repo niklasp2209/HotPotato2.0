@@ -1,26 +1,28 @@
 package de.bukkitnews.hotpotato.module.game.gamestate.ingame;
 
 import de.bukkitnews.hotpotato.module.game.GameModule;
-import de.bukkitnews.hotpotato.module.game.gamestate.CustomGameStates;
+import de.bukkitnews.hotpotato.module.game.gamestate.AbstractGameState;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
-import lombok.NonNull;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Represents the Ingame state in the game. This is the state where the actual game happens
  * after players have joined and the countdown has finished.
  */
-public class IngameState extends CustomGameStates {
+public class IngameState extends AbstractGameState {
 
     /**
      * Constructor to initialize the Ingame state.
      *
      * @param gameModule The game module this state belongs to.
      */
-    public IngameState(@NonNull GameModule gameModule) {
-        super(gameModule, "Ingame");
+    public IngameState(@NotNull GameModule gameModule) {
+        super(gameModule);
     }
 
     /**
@@ -42,19 +44,24 @@ public class IngameState extends CustomGameStates {
     }
 
     @Override
-    public void onJoin(@NonNull Player player) {
-        GamePlayer gamePlayer = this.getGameModule().getHotPotato().getModuleManager().getModule(PlayerModule.class).get()
-                .getGamePlayerManager().getCachedPlayer(player.getUniqueId().toString());
-        if (gamePlayer != null) {
-            gamePlayer.setAlive(false);
-        }
+    public void onJoin(@NotNull Player player) {
+        Optional<PlayerModule> playerModuleOpt = getGameModule().getHotPotato().getModuleManager().getModule(PlayerModule.class);
+        playerModuleOpt.ifPresent(playerModule -> {
+            Optional<GamePlayer> gamePlayerOpt = Optional.of(playerModule.getGamePlayerManager()
+                    .getCachedPlayer(player.getUniqueId().toString()));
 
-        player.getInventory().clear();
-        player.setGameMode(GameMode.SPECTATOR);
+            gamePlayerOpt.ifPresent(gamePlayer -> {
+                gamePlayer.setAlive(false);
+
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SPECTATOR);
+            });
+        });
     }
 
+
     @Override
-    public void onQuit(@NonNull Player player) {
+    public void onQuit(@NotNull Player player) {
 
     }
 }

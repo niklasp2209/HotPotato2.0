@@ -1,30 +1,27 @@
-package de.bukkitnews.hotpotato.module.game.gamestate.lobby.task;
+package de.bukkitnews.hotpotato.module.game.gamestate.lobby;
 
 import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.events.VotingFinishedEvent;
+import de.bukkitnews.hotpotato.module.arena.voting.Voting;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.ingame.IngameState;
-import de.bukkitnews.hotpotato.module.game.gamestate.task.Countdown;
+import de.bukkitnews.hotpotato.module.game.gamestate.countdown.Countdown;
 import de.bukkitnews.hotpotato.util.MessageUtil;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents the lobby countdown logic for the game.
- * Handles transitioning from the lobby phase to the in-game phase
- * and manages idle behavior when there aren't enough players.
- */
-@Getter @Setter
-public class LobbyTask extends Countdown {
+@Getter
+@Setter
+public class LobbyCountdown extends Countdown {
 
-    @NonNull private final GameModule gameModule;
+    private final @NotNull GameModule gameModule;
     private int idleId;
     private boolean isIdling;
 
-    public LobbyTask(@NonNull GameModule gameModule) {
+    public LobbyCountdown(@NotNull GameModule gameModule) {
         this.gameModule = gameModule;
         setInitialDuration(60);
         startIdle();
@@ -35,28 +32,26 @@ public class LobbyTask extends Countdown {
      * If idle mode is active, it stops the idle task.
      * Triggers a voting event when the countdown reaches 5 seconds.
      */
-    @Override
     protected void onTick() {
-        if (this.isIdling) {
+        if (isIdling) {
             stopIdle();
         }
 
-        super.onTick();
-
-        if (this.seconds == 5) {
-            Bukkit.getPluginManager().callEvent(new VotingFinishedEvent(
-                    this.gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get()
-                            .getVoting().getVotingWinner()));
+        if (seconds == 5) {
+            gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class)
+                    .map(ArenaModule::getVoting)
+                    .map(Voting::getVotingWinner)
+                    .ifPresent(votingWinner -> Bukkit.getPluginManager().callEvent(new VotingFinishedEvent(votingWinner)));
         }
     }
+
 
     /**
      * Handles actions when the countdown finishes.
      * Transitions the game to the in-game state when the countdown reaches 0.
      */
-    @Override
     protected void onFinish() {
-        this.gameModule.setCurrentState(new IngameState(this.gameModule));
+        gameModule.setCurrentState(new IngameState(gameModule));
     }
 
     /**
@@ -66,9 +61,9 @@ public class LobbyTask extends Countdown {
      * @return The message to display to players.
      */
     @Override
-    protected String getRemainingTimeMessage() {
-        String messageKey = (this.seconds == 1) ? "lobbytask_remaining1" : "lobbytask_remaining";
-        return MessageUtil.getMessage(messageKey, String.valueOf(this.seconds));
+    protected @NotNull String getRemainingTimeMessage() {
+        String messageKey = (seconds == 1) ? "lobbytask_remaining1" : "lobbytask_remaining";
+        return MessageUtil.getMessage(messageKey, String.valueOf(seconds));
     }
 
     /**
@@ -84,8 +79,8 @@ public class LobbyTask extends Countdown {
     }
 
     @Override
-    protected Plugin getPlugin() {
-        return this.gameModule.getHotPotato();
+    protected @NotNull Plugin getPlugin() {
+        return gameModule.getHotPotato();
     }
 
     /**
@@ -96,11 +91,10 @@ public class LobbyTask extends Countdown {
         stop();
         this.isIdling = true;
 
-        this.idleId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.gameModule.getHotPotato(), () -> {
-            Bukkit.getOnlinePlayers().forEach(player ->
-                    player.sendMessage(MessageUtil.getMessage("idling_message"))
-            );
-        }, 0L, 20L * 15);
+        this.idleId = Bukkit.getScheduler().scheduleSyncRepeatingTask(gameModule.getHotPotato(), () ->
+                Bukkit.getOnlinePlayers().forEach(player ->
+                        player.sendMessage(MessageUtil.getMessage("idling_message"))
+                ), 0L, 20L * 15);
     }
 
     /**
@@ -108,9 +102,30 @@ public class LobbyTask extends Countdown {
      * Cancels the idle message task and resets the idle state.
      */
     public void stopIdle() {
-        if (this.isIdling) {
-            Bukkit.getScheduler().cancelTask(this.idleId);
+        if (isIdling) {
+            Bukkit.getScheduler().cancelTask(idleId);
             this.isIdling = false;
         }
+    }
+
+    /**
+     * Starts the countdown task using Runnable.
+     */
+    @Override
+    public void start() {
+        this.isRunning = true;
+        this.seconds = initialDuration;
+
+        Bukkit.getScheduler().runTaskTimer(getPlugin(), this::onTick, 0L, 20L);
+    }
+
+    /**
+     * Stops the countdown.
+     * Cancels the countdown task and resets the timer state.
+     */
+    @Override
+    public void stop() {
+        this.isRunning = false;
+        this.seconds = initialDuration;
     }
 }

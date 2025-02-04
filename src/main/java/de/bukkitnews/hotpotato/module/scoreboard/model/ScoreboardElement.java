@@ -2,9 +2,9 @@ package de.bukkitnews.hotpotato.module.scoreboard.model;
 
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scoreboard.Objective;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The ScoreboardElement class is an abstract class that represents an element on the scoreboard.
@@ -15,18 +15,18 @@ import org.bukkit.scoreboard.Objective;
 @Data
 public abstract class ScoreboardElement {
 
-    @NonNull private final String identifier;
-    @NonNull  private final String label;
-    @NonNull private final String defaultValue;
+    private final @NotNull String identifier;
+    private final @NotNull String label;
+    private final @NotNull String defaultValue;
 
     /**
      * Applies this scoreboard element to the provided Objective at a specific score index.
      * This method defines how the element is displayed on the scoreboard.
      *
-     * @param objective The scoreboard Objective to which this element will be added
+     * @param objective  The scoreboard Objective to which this element will be added
      * @param scoreIndex The score index at which the element will be displayed on the scoreboard
      */
-    public abstract void applyToScoreboard(@NonNull Objective objective, int scoreIndex);
+    public abstract void applyToScoreboard(@NotNull Objective objective, int scoreIndex);
 
     /**
      * Updates this scoreboard element based on the current state of the given GamePlayer.
@@ -34,5 +34,5 @@ public abstract class ScoreboardElement {
      *
      * @param gamePlayer The player whose information will be used to update the scoreboard element
      */
-    public abstract void update(@NonNull GamePlayer gamePlayer);
+    public abstract void update(@NotNull GamePlayer gamePlayer);
 }

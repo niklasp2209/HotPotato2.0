@@ -2,9 +2,9 @@ package de.bukkitnews.hotpotato.module.player.handler;
 
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
 import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handler for managing the playtime of players.
@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class PlaytimeHandler extends BukkitRunnable {
 
-    @NonNull private final PlayerModule playerModule;
+    private final @NotNull PlayerModule playerModule;
 
     /**
      * Periodically increases the playtime for each player in the game.
@@ -21,7 +21,7 @@ public class PlaytimeHandler extends BukkitRunnable {
      */
     @Override
     public void run() {
-        this.playerModule.getGamePlayerManager().getPlayerCache().values().forEach(this::increasePlaytimeForPlayer);
+        playerModule.getGamePlayerManager().getPlayerCache().values().forEach(this::increasePlaytimeForPlayer);
     }
 
     /**
@@ -29,7 +29,7 @@ public class PlaytimeHandler extends BukkitRunnable {
      * The task runs every 60 seconds (1200 ticks).
      */
     public void startHandler() {
-        this.runTaskTimer(this.playerModule.getHotPotato(), 0L, 1200L);
+        runTaskTimer(playerModule.getHotPotato(), 0L, 60 * 20L);
     }
 
     /**
@@ -37,7 +37,7 @@ public class PlaytimeHandler extends BukkitRunnable {
      *
      * @param gamePlayer The player whose playtime will be increased.
      */
-    private void increasePlaytimeForPlayer(@NonNull GamePlayer gamePlayer) {
-        gamePlayer.increasePlaytime(1L);
+    private void increasePlaytimeForPlayer(@NotNull GamePlayer gamePlayer) {
+        gamePlayer.getStats().incrementPlaytime(1L);
     }
 }

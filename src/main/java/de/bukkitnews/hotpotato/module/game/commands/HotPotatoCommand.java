@@ -4,12 +4,14 @@ import de.bukkitnews.hotpotato.module.arena.ArenaModule;
 import de.bukkitnews.hotpotato.module.arena.model.Arena;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.util.MessageUtil;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Command handler for the HotPotato plugin.
@@ -18,10 +20,10 @@ import org.bukkit.entity.Player;
 @RequiredArgsConstructor
 public class HotPotatoCommand implements CommandExecutor {
 
-    @NonNull private final GameModule gameModule;
+    private final @NotNull GameModule gameModule;
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             return true;
         }
@@ -43,32 +45,38 @@ public class HotPotatoCommand implements CommandExecutor {
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
      * Handles the "create" subcommand under the "setup" command.
      * This method is used to create a new arena with the specified name.
+     *
      * @param arenaName The name of the arena to create.
-     * @param player The player who issued the command.
+     * @param player    The player who issued the command.
      */
-    private void handleCreateArena(String arenaName, Player player) {
-        Arena arena = new Arena(arenaName, gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class).get());
+    private void handleCreateArena(@NotNull String arenaName, @NotNull Player player) {
+        Optional<ArenaModule> arenaModule = gameModule.getHotPotato().getModuleManager().getModule(ArenaModule.class);
 
-        if (arena.alreadyExists()) {
-            player.sendMessage(MessageUtil.getMessage("setup_arena_exists"));
-        } else {
-            player.sendMessage(MessageUtil.getMessage("setup_arena_spawn"));
-        }
+        arenaModule.ifPresent(module -> {
+            Arena arena = new Arena(arenaName, module);
+
+            if (arena.alreadyExists()) {
+                player.sendMessage(MessageUtil.getMessage("setup_arena_exists"));
+            } else {
+                player.sendMessage(MessageUtil.getMessage("setup_arena_spawn"));
+            }
+        });
     }
+
 
     /**
      * Handles the "spawnlocation" subcommand under the "setup" command.
      * This method is used to set the spawn location for the arena.
+     *
      * @param player The player who issued the command.
      */
-    private void handleSpawnLocation(Player player) {
-
+    private void handleSpawnLocation(@NotNull Player player) {
         player.sendMessage(MessageUtil.getMessage("setup_spawn_location"));
     }
 }

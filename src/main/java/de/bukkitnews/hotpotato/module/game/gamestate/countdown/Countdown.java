@@ -1,65 +1,41 @@
-package de.bukkitnews.hotpotato.module.game.gamestate.task;
+package de.bukkitnews.hotpotato.module.game.gamestate.countdown;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
-@Getter @Setter
-public abstract class Countdown {
+@Getter
+@Setter
+public abstract class Countdown implements Runnable {
 
-    /**
-     * The task ID associated with the scheduled countdown.
-     * Used to manage and cancel the task in the Bukkit scheduler.
-     */
-    protected int taskId;
-
-    /**
-     * The number of seconds remaining in the countdown.
-     */
     protected int seconds;
-
-    /**
-     * The initial duration of the countdown in seconds.
-     * This value resets the countdown timer when stopped or restarted.
-     */
     protected int initialDuration;
-
-    /**
-     * Indicates whether the countdown is currently running.
-     */
     protected boolean isRunning;
 
-    /**
-     * Constructor for the Countdown class.
-     * Sets the default initial duration to 60 seconds.
-     */
     public Countdown() {
         this.initialDuration = 60;
     }
 
     /**
      * Starts the countdown.
-     * Schedules a repeating task in the Bukkit scheduler and initializes the timer.
+     * Schedules a repeating task using Bukkit's scheduler and initializes the timer.
      */
     public void start() {
         this.isRunning = true;
-        this.seconds = this.initialDuration;
-        this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-                getPlugin(),
-                this::onTick,
-                0L,
-                20L
-        );
+        this.seconds = initialDuration;
+
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        scheduler.runTaskTimer(getPlugin(), this, 0L, 20L);
     }
 
     /**
      * Stops the countdown.
-     * Cancels the scheduled task in the Bukkit scheduler and resets the timer state.
+     * Cancels the scheduled task and resets the timer state.
      */
     public void stop() {
         this.isRunning = false;
-        Bukkit.getScheduler().cancelTask(this.taskId);
         this.seconds = this.initialDuration;
     }
 
@@ -68,15 +44,16 @@ public abstract class Countdown {
      * Decrements the timer and triggers appropriate actions when the timer ends
      * or when specific time intervals are reached.
      */
-    protected void onTick() {
-        if (this.seconds <= 0) {
-            onFinish();
-        } else {
-            if (shouldSendRemainingTime(this.seconds)) {
-                sendRemainingTimeMessage();
-            }
-            this.seconds--;
+    @Override
+    public void run() {
+        if (seconds <= 0) {
+            return;
         }
+
+        if (shouldSendRemainingTime(seconds)) {
+            sendRemainingTimeMessage();
+        }
+        seconds--;
     }
 
     /**
@@ -106,17 +83,5 @@ public abstract class Countdown {
      */
     protected abstract boolean shouldSendRemainingTime(int seconds);
 
-    /**
-     * Executes when the countdown reaches zero.
-     * Subclasses must implement this to define what happens when the countdown ends.
-     */
-    protected abstract void onFinish();
-
-    /**
-     * Retrieves the plugin instance required for scheduling tasks.
-     * Subclasses must provide their specific plugin instance.
-     *
-     * @return The plugin instance.
-     */
     protected abstract Plugin getPlugin();
 }

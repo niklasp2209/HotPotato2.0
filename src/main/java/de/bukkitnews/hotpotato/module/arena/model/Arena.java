@@ -7,8 +7,12 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Represents an arena in the game.
@@ -18,36 +22,19 @@ import java.util.Optional;
 @Setter
 public class Arena {
 
-    @NonNull private final String name;
-    @NonNull private ArenaModule arenaModule;
+    private final @NotNull String name;
+    private final @NotNull ArenaModule arenaModule;
+    private @NotNull Optional<Location> spawnLocation = Optional.empty();
+    private final @NotNull Set<UUID> votedPlayers = new HashSet<>();
+
     private int minPlayers;
     private int maxPlayers;
-    /**
-     * -- GETTER --
-     *  Retrieves the spawn location of the arena, if available.
-     *
-     * @return An Optional containing the spawn location, or an empty Optional if it is not set.
-     */
-    @Getter
-    private Optional<Location> spawnLocation = Optional.empty();
-    /**
-     * -- GETTER --
-     * Gets the current vote count for this arena.
-     *
-     * @return the current vote count.
-     */
-    @Getter
     private int votes;
 
-    /**
-     * Constructs a new Arena with the specified name.
-     * The arena configuration is loaded from the configuration file.
-     *
-     * @param name The name of the arena.
-     */
-    public Arena(@NonNull String name, @NonNull ArenaModule arenaModule) {
+    public Arena(@NotNull String name, @NotNull ArenaModule arenaModule) {
         this.name = name;
         this.arenaModule = arenaModule;
+        this.votes = 0;
         load();
     }
 
@@ -56,19 +43,19 @@ public class Arena {
      * Loads the arena configuration from the arena module configuration file.
      */
     private void load() {
-        String basePath = ".Arenas." + this.name;
+        String basePath = ".Arenas." + name;
 
-        this.spawnLocation = Optional.ofNullable(this.arenaModule
+        this.spawnLocation = Optional.ofNullable(arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getLocation(basePath + ".Spawn"));
 
-        this.minPlayers = this.arenaModule
+        this.minPlayers = arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getInt(basePath + ".MinPlayers", 0);
 
-        this.maxPlayers = this.arenaModule
+        this.maxPlayers = arenaModule
                 .getArenaConfig()
                 .getConfig()
                 .getInt(basePath + ".MaxPlayers", 0);
@@ -80,7 +67,10 @@ public class Arena {
      * @return true if the arena has a spawn location and valid player count limits; false otherwise.
      */
     public boolean isPlayable() {
-        return this.spawnLocation.isPresent() && this.minPlayers > 0 && this.maxPlayers > 0 && !this.name.isEmpty();
+        return spawnLocation.isPresent()
+                && minPlayers > 0
+                && maxPlayers > 0
+                && !name.isEmpty();
     }
 
     /**
@@ -89,32 +79,26 @@ public class Arena {
      * @return true if the arena exists; false otherwise.
      */
     public boolean alreadyExists() {
-        return Optional.ofNullable(this.arenaModule
+        return Optional.ofNullable(arenaModule
                 .getArenaConfig()
                 .getConfig()
-                .getString(".Arenas." + this.name)).isPresent();
+                .getString(".Arenas." + name)).isPresent();
     }
 
     /**
      * Teleports all online players to the arena's spawn location if it exists.
      */
     public void teleportPlayers() {
-        this.spawnLocation.ifPresent(location ->
-                Bukkit.getOnlinePlayers().forEach(player -> player.teleport(location)));
+        spawnLocation.ifPresent(location -> Bukkit.getOnlinePlayers().forEach(player -> player.teleport(location)));
     }
 
-    /**
-     * Increments the vote count for this arena.
-     */
-    public void addVote() {
-        this.votes++;
-    }
-
-    /**
-     * Decrements the vote count for this arena.
-     */
-    public void removeVote() {
-        this.votes--;
+    public boolean addVote(@NotNull UUID playerUUID) {
+        if (votedPlayers.contains(playerUUID)) {
+            return false;
+        }
+        votedPlayers.add(playerUUID);
+        votes++;
+        return true;
     }
 
 }

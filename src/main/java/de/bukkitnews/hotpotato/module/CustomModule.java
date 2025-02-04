@@ -2,13 +2,13 @@ package de.bukkitnews.hotpotato.module;
 
 import de.bukkitnews.hotpotato.HotPotato;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -22,12 +22,12 @@ import java.util.HashMap;
 @Setter
 public abstract class CustomModule {
 
-    @NonNull private final HotPotato hotPotato;
-    @NonNull private final String moduleName;
-    @NonNull private List<Listener> listeners;
-    @NonNull private Map<String, CommandExecutor> commandExecutors;
+    private final HotPotato hotPotato;
+    private final String moduleName;
+    private List<Listener> listeners;
+    private Map<String, CommandExecutor> commandExecutors;
 
-    public CustomModule(@NonNull HotPotato hotPotato, @NonNull String name) {
+    public CustomModule(@NotNull HotPotato hotPotato, @NotNull String name) {
         this.hotPotato = hotPotato;
         this.moduleName = name;
         this.commandExecutors = new HashMap<>();
@@ -48,10 +48,10 @@ public abstract class CustomModule {
      * This method should be called when the module is loaded.
      */
     public void start() {
-        logToConsole("Initializing module: " + this.moduleName);
+        logToConsole("Initializing module: " + moduleName);
         registerEventListeners();
         bindCommands();
-        logToConsole("Module: " + this.moduleName + " loaded successfully!");
+        logToConsole("Module: " + moduleName + " loaded successfully!");
     }
 
     /**
@@ -59,9 +59,9 @@ public abstract class CustomModule {
      * This method should be called when the module is unloaded.
      */
     public void stop() {
-        logToConsole("Disabling module: " + this.moduleName);
+        logToConsole("Disabling module: " + moduleName);
         unregisterEventListeners();
-        logToConsole("Module: " + this.moduleName + " has been disabled.");
+        logToConsole("Module: " + moduleName + " has been disabled.");
     }
 
     /**
@@ -69,13 +69,13 @@ public abstract class CustomModule {
      * command with the corresponding executor.
      */
     private void bindCommands() {
-        if (this.commandExecutors == null || this.commandExecutors.isEmpty()) {
+        if (commandExecutors.isEmpty()) {
             return;
         }
 
-        this.commandExecutors.forEach((command, executor) -> {
-            this.hotPotato.getCommand(command).setExecutor(executor);
-            logToConsole("Module: " + this.moduleName + " has registered command: " + command);
+        commandExecutors.forEach((command, executor) -> {
+            hotPotato.getCommand(command).setExecutor(executor);
+            logToConsole("Module: " + moduleName + " has registered command: " + command);
         });
     }
 
@@ -84,14 +84,14 @@ public abstract class CustomModule {
      * and registers each with the plugin's event manager.
      */
     private void registerEventListeners() {
-        if (this.listeners == null || this.listeners.isEmpty()) {
+        if (listeners.isEmpty()) {
             return;
         }
 
         PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        this.listeners.forEach(listener -> {
-            pluginManager.registerEvents(listener, this.hotPotato);
-            logToConsole("Module: " + this.moduleName + " has registered event listener: " + listener);
+        listeners.forEach(listener -> {
+            pluginManager.registerEvents(listener, hotPotato);
+            logToConsole("Module: " + moduleName + " has registered event listener: " + listener);
         });
     }
 
@@ -100,13 +100,13 @@ public abstract class CustomModule {
      * and removes all of them from the event handler list.
      */
     private void unregisterEventListeners() {
-        if (this.listeners == null || this.listeners.isEmpty()) {
+        if (listeners.isEmpty()) {
             return;
         }
 
-        this.listeners.forEach(listener -> {
+        listeners.forEach(listener -> {
             HandlerList.unregisterAll(listener);
-            logToConsole("Module: " + this.moduleName + " has unregistered event listener: " + listener);
+            logToConsole("Module: " + moduleName + " has unregistered event listener: " + listener);
         });
     }
 
@@ -115,7 +115,7 @@ public abstract class CustomModule {
      *
      * @param message The message to log.
      */
-    private void logToConsole(@NonNull String message) {
+    private void logToConsole(@NotNull String message) {
         Bukkit.getLogger().info(message);
     }
 }
