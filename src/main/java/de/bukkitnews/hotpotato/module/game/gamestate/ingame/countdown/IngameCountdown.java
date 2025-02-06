@@ -3,7 +3,6 @@ package de.bukkitnews.hotpotato.module.game.gamestate.ingame.countdown;
 import de.bukkitnews.hotpotato.module.game.GameModule;
 import de.bukkitnews.hotpotato.module.game.gamestate.countdown.Countdown;
 import de.bukkitnews.hotpotato.module.player.PlayerModule;
-import de.bukkitnews.hotpotato.module.player.model.GamePlayer;
 import de.bukkitnews.hotpotato.util.PacketUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;

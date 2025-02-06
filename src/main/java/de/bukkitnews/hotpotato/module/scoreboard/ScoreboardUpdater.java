@@ -16,7 +16,7 @@ public class ScoreboardUpdater {
      private final @NotNull ScoreboardModule scoreboardModule;
      private final @NotNull ScoreboardController scoreboardController;
 
-    public void startUpdating(GamePlayer gamePlayer) {
+    public void startUpdating(@NotNull GamePlayer gamePlayer) {
         new BukkitRunnable() {
             @Override
             public void run() {

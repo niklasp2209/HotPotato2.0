@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -22,14 +23,15 @@ import java.util.HashMap;
 @Setter
 public abstract class CustomModule {
 
-    private final HotPotato hotPotato;
-    private final String moduleName;
-    private List<Listener> listeners;
-    private Map<String, CommandExecutor> commandExecutors;
+    private final @NotNull HotPotato hotPotato;
+    private final @NotNull String moduleName;
+    private final @NotNull List<Listener> listeners;
+    private final @NotNull Map<String, CommandExecutor> commandExecutors;
 
     public CustomModule(@NotNull HotPotato hotPotato, @NotNull String name) {
         this.hotPotato = hotPotato;
         this.moduleName = name;
+        this.listeners = new ArrayList<>();
         this.commandExecutors = new HashMap<>();
     }
 
